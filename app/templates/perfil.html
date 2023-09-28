@@ -1,0 +1,28 @@
+{% extends './layout.html' %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block body%}
+<table>
+    <tr>
+        <th>USUARIO_ID</th>
+        <th>RUT_USUARIO</th>
+        <th>DV_USUARIO</th>
+        <th>NOMBRE_USUARIO</th>
+        <th>APELLIDO_USUARIO</th>
+        <th>CORREO_USUARIO</th>
+        <th>TELEFONO_USUARIO</th>
+    </tr>
+    {% for usuario in usuarios %}
+    <tr>
+        <td>{{ usuario.usuario_id }}</td>
+        <td>{{ usuario.rut_usuario }}</td>
+        <td>{{ usuario.dv_usuario }}</td>
+        <td>{{ usuario.nombre_usuario }}</td>
+        <td>{{ usuario.apellido_usuario }}</td>
+        <td>{{ usuario.correo_usuario }}</td>
+        <td>{{ usuario.telefono_usuario }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

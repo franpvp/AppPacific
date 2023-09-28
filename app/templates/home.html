@@ -1,0 +1,32 @@
+{% extends './layout.html' %}
+
+{% block title %}{{ data.titulo }}{% endblock %}
+
+{% block body%}
+<!-- Barra menu -->
+<div class="barra-menu">
+    <div class="boton">
+        <div class="btn-menu">Inicio</div>
+    </div>
+    <div class="boton">
+        <div class="btn-menu">Habitaciones</div>
+    </div>
+    <div class="boton">
+        <div class="btn-menu">Login</div>
+    </div>
+</div>
+<!-- Contenido Ingreso -->
+<div class="contenedor">
+    <img class="imagen-fondo" src="{{ url_for('static', filename='img/marten-bjork-n_IKQDCyrG0-unsplash.jpg')}}" alt="Descripción de la imagen">
+    <!-- Formulario login -->
+    <div class="contenedor-derecho">
+        <h1 class="titulo-bienvenida">{{ data.bienvenida }}</h1>
+        <h2 class="titulo-ingreso">{{ data.titulo }}</h2>
+        <button class="boton">Login</button>
+        <button class="boton">Registro</button>
+    </div>
+</div>
+
+<!--  -->
+
+{% endblock %}
