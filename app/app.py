@@ -71,8 +71,10 @@ def consultar_usuarios():
     perfil = Usuario.query.all()
     return render_template('perfil.html', perfil=perfil)
 
-# Vista Reserva
-
+# Vista Inicio Sesión
+@app.route('/inicio-sesion')
+def login():
+    return render_template('inicio-sesion.html')
 
 
 def pagina_no_encontrada(error):

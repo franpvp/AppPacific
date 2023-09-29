@@ -65,6 +65,47 @@ body {
 
 .boton:hover {
     background-color: #0056b3;
-    scale: 1.05;
+    scale: 1.03;
 }
+
+.formulario {
+    background-color: #fff;
+    padding: 50px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.campo {
+    margin-bottom: 20px;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.campo input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.registro {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.registro a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.registro a:hover {
+    text-decoration: underline;
+}
+
+
 
