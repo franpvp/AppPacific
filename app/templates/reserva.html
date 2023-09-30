@@ -3,7 +3,94 @@
 {% block title %}Reserva{% endblock %}
 
 {% block body%}
+<!-- Barra menu -->
+<div class="container-fluid">
+    <div class="barra-menu row row-cols-auto">
+        <div class="col-md-6 col-6"></div>
+        <div class="col text-center">
+            <a href="{{ url_for('home') }}">
+                <button class="boton">Inicio</button>
+            </a>
+        </div>
+        <div class="col text-center">
+            <a href="{{ url_for('lista_reservas') }}">
+                <button class="boton">Mis reservas</button>
+            </a>
+        </div>
+        <div class="col text-center">
+            <button class="boton">
+                <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
+                Bienvenido {{ data['nombre'] }}</button>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
 
+<!-- Contenido Formulario de Reserva -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h1 class="titulo-reserva text-center">Reserva</h1>
+        </div>
+    </div>
+    <!-- Input Selección de fechas -->
+    <div class="container">
+        <div class="form-group">
+            <label for="fecha">Seleccione una fecha:</label>
+            <div class="input-group date" id="datetimepicker" data-target-input="nearest">
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker" id="fecha"/>
+                <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
+                    <div class="input-group-text">
+                        <img class="calendar" src="{{ url_for('static', filename='img/calendar.png') }}">
+                    </div>
+                </div>
+            </div>
+            <!-- Input cantidad de huéspedes -->
+            <div class="input-huespedes">
+                <label for="fecha">Ingrese cantidad de huéspedes:</label>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Seleccione</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información habitaciones -->
+    <div class="row">
+        <div class="col"></div>
+        <div class="col">
+            <div class="card mb-3 text-center" style="width: 100%;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{{ url_for('static', filename='img/standard_matrimonial.jpg')}}" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Standard Matrimonial</h5>
+                            <h6 class="card-title">Standard Matrimonial</h6>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+    
+</div>
+
+<script>
+    // Inicializa Tempus Dominus Datepicker
+    $(function () {
+        $('#datetimepicker').datetimepicker({
+            format: 'YYYY-MM-DD', // Formato de fecha deseado
+        });
+    });
+</script>
 
 
 {% endblock %}

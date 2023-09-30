@@ -21,12 +21,16 @@ def after_request(response):
 #Decorador con la ruta raiz
 @app.route('/')
 # La función home va a ser una vista
-def home():
+def index():
     data = {
         'bienvenida': 'Bienvenido a PacificApp',
         'titulo': 'Sistema de reserva de habitaciones'
     }
-    return render_template('home.html', data=data)
+    return render_template('index.html', data=data)
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
 # Se pone la ruta a la vista mediante el decorador @app.route()
 @app.route('/contacto/<nombre>/<int:edad>')
@@ -46,7 +50,6 @@ def query_string():
     print(request.args.get('param2'))
     return "Ok"
 
-# Vista Perfil de usuario
 class Usuario(db.Model):
     usuario_id = db.Column(db.Integer, primary_key=True)
     rut_usuario = db.Column(db.String(12))
@@ -66,20 +69,71 @@ class Usuario(db.Model):
         self.telefono_usuario = telefono_usuario
         self.tipo_usuario_id = tipo_usuario_id
 
+# Vista Perfil de usuario (Consultando a una base de datos)
 @app.route('/perfil')
 def consultar_usuarios():
     perfil = Usuario.query.all()
     return render_template('perfil.html', perfil=perfil)
 
+
+
 # Vista Inicio Sesión
-@app.route('/inicio-sesion')
+@app.route('/inicio-sesion', methods=['GET', 'POST'])
 def login():
-    return render_template('inicio-sesion.html')
+    error = None
+    # Diccionario con usuario
+    usuarios = {
+        'email':'juanperez@gmail.com',
+        'password':'juanperez123'
+    }
+    if request.method == 'POST':
+        email = request.form['email']
+        contrasena = request.form['password']
 
+        # Validación de credenciales
+        if email == usuarios['email'] and contrasena == usuarios['password']:
+            # Autenticación exitosa, redirige a la página de inicio
+            return redirect(url_for('reserva'))
+        else:
+            # Credenciales incorrectas, muestra un mensaje de error
+            error = "Credenciales incorrectas. Por favor, inténtalo nuevamente."
 
+    return render_template('inicio-sesion.html', error=error)
+
+# Vista Registro
+@app.route('/registro')
+def registro():
+    return render_template('/registro.html')
+
+#Vista Habitaciones
+@app.route('/habitaciones')
+def habitaciones():
+    data = {
+
+    }
+    return render_template('habitaciones.html', data=data)
+
+# Vista Reserva
+@app.route('/reserva')
+def reserva():
+    data = {
+        'nombre': 'Juan',
+        'apellido': 'Perez',
+        'email': 'juanperez@gmail.com',
+        'telefono': '123456789'
+    }
+    return render_template('reserva.html', data=data)
+
+@app.route('/mis-reservas')
+def lista_reservas():
+    data = {
+
+    }
+    return render_template('mis-reservas.html', data=data)
+
+# Vista error 404
 def pagina_no_encontrada(error):
-    # return render_template('404.html'), 404
-    return redirect(url_for('home'))
+    return render_template('404.html'), 404
 
 if __name__=='__main__':
     app.add_url_rule('/query_string', view_func=query_string)

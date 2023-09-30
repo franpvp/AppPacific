@@ -1,14 +1,15 @@
 {% extends './layout.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Habitaciones{% endblock %}
 
 {% block body%}
+
 <!-- Barra menu -->
 <div class="container-fluid">
     <div class="barra-menu row row-cols-auto">
-        <div class="col-md-6 col-6"></div>
+        <div class="col-6"></div>
         <div class="col text-center">
-            <a href="{{ url_for('index') }}">
+            <a href="{{ url_for('home') }}">
                 <button class="boton">Inicio</button>
             </a>
         </div>
@@ -22,7 +23,6 @@
                 <button class="boton">Inicio Sesión</button>
             </a>
         </div>
-        <div class="col"></div>
     </div>
 </div>
 

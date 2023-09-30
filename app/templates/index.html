@@ -1,0 +1,63 @@
+{% extends './layout.html' %}
+
+{% block title %}PacificApp{% endblock %}
+
+{% block body%}
+<!-- Barra menu -->
+<div class="container-fluid">
+    <div class="barra-menu row row-cols-auto">
+        <div class="col-md-6 col-6"></div>
+        <div class="col text-center">
+            <a href="{{ url_for('index') }}">
+                <button class="boton">Inicio</button>
+            </a>
+        </div>
+        <div class="col text-center">
+            <a href="{{ url_for('habitaciones') }}">
+                <button class="boton">Habitaciones</button>
+            </a>
+        </div>
+        <div class="col text-center">
+            <a href="{{ url_for('login') }}">
+                <button class="boton">Inicio Sesión</button>
+            </a>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+<!-- Contenido Ingreso -->
+<div class="contenedor row">
+    <div class="col-12">
+        <img class="imagen-fondo" src="{{ url_for('static', filename='img/marten-bjork-n_IKQDCyrG0-unsplash.jpg')}}" alt="Descripción de la imagen">
+    </div>
+    
+    <!-- Formulario Ingreso -->
+    <div class="row">
+        <div class="contenedor-izquierdo col-5">
+            <div class="col-md-6 col-6">
+                <h1 class="titulo-bienvenida text-center">{{ data.bienvenida }}</h1>
+                <h2 class="titulo-ingreso text-center">{{ data.titulo }}</h2>
+                <div class="row">
+                    <div class="col text-center">
+                        <a href="{{ url_for('login') }}">
+                            <button class="boton">Inicio Sesión</button>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-center">
+                        <a href="{{ url_for('registro') }}">
+                            <button class="boton">Registrarse</button>
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="col-6"></div>
+</div>
+
+{% endblock %}

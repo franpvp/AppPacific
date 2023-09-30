@@ -4,33 +4,56 @@
 
 {% block body%}
 <!-- Barra menu -->
-<div class="barra-menu">
-    <div class="boton">
-        <div class="btn-menu">Inicio</div>
-    </div>
-    <div class="boton">
-        <div class="btn-menu">Habitaciones</div>
-    </div>
-    <div class="boton">
-        <div class="btn-menu">Inicio sesión</div>
+<div class="container-fluid">
+    <div class="barra-menu row row-cols-auto">
+        <div class="col-6"></div>
+        <div class="col text-center">
+            <a href="{{ url_for('index') }}">
+                <button class="boton">Inicio</button>
+            </a>
+        </div>
+        <div class="col text-center">
+            <a href="{{ url_for('habitaciones') }}">
+                <button class="boton">Habitaciones</button>
+            </a>
+        </div>
+        <div class="col text-center">
+            <a href="{{ url_for('login') }}">
+                <button class="boton">Inicio Sesión</button>
+            </a>
+        </div>
+        
     </div>
 </div>
-
-<div class="contenedor">
+<!-- Formulario inicio de sesión -->
+<div class="container-fluid">
     <div class="formulario">
-        <h2>Iniciar Sesión</h2>
-        <form action="#" method="post">
-            <div class="campo">
-                <label for="usuario">Nombre de Usuario:</label>
-                <input type="text" id="usuario" name="usuario" required>
+        <div class="col"></div>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-6">
+                <h2 class="text-center">Iniciar Sesión</h2>
+                <form action="/inicio-sesion" method="post">
+                    <div class="campo">
+                        <label for="email">Ingrese su email:</label>
+                        <input type="text" id="email" name="email" required>
+                    </div>
+                    <div class="campo">
+                        <label for="password">Ingrese contraseña:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <button class="boton" type="submit">Iniciar Sesión</button>
+                        </div>
+                    </div>
+                    
+                </form>
+                <p class="registro text-center">¿No tienes una cuenta? <a href="{{ url_for('registro')}}">Registrarse</a></p>
             </div>
-            <div class="campo">
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button class="boton" type="submit">Iniciar Sesión</button>
-        </form>
-        <p class="registro">¿No tienes una cuenta? <a href="#">Registrarse</a></p>
+            <div class="col"></div>
+        </div>
+        <div class="col"></div>
     </div>
 </div>
 
