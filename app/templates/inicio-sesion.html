@@ -5,56 +5,75 @@
 {% block body%}
 <!-- Barra menu -->
 <div class="container-fluid">
-    <div class="barra-menu row row-cols-auto">
-        <div class="col-6"></div>
-        <div class="col text-center">
-            <a href="{{ url_for('index') }}">
-                <button class="boton">Inicio</button>
-            </a>
+    <div class="barra-menu row">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4 text-center">
+                <img class="logo_home mx-auto" src="{{ url_for('static', filename='img/logo2_hotel.png') }}" alt="logo">
+            </div>
+            <div class="col-4"></div>
+            <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
+                <!-- Botones -->
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        <a href="{{ url_for('index') }}">
+                            <button class="boton">Inicio</button>
+                        </a>
+                        <a href="{{ url_for('habitaciones') }}">
+                            <button class="boton">Habitaciones</button>
+                        </a>
+                        <a href="{{ url_for('login') }}">
+                            <button class="boton">Inicio Sesión</button>
+                        </a>
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    </div>
+            </div>
         </div>
-        <div class="col text-center">
-            <a href="{{ url_for('habitaciones') }}">
-                <button class="boton">Habitaciones</button>
-            </a>
-        </div>
-        <div class="col text-center">
-            <a href="{{ url_for('login') }}">
-                <button class="boton">Inicio Sesión</button>
-            </a>
-        </div>
-        
     </div>
 </div>
 <!-- Formulario inicio de sesión -->
-<div class="container-fluid">
-    <div class="formulario">
+<div class="container-fluid pt-5">
+    <div class="row">
         <div class="col"></div>
-        <div class="row">
-            <div class="col"></div>
-            <div class="col-6">
-                <h2 class="text-center">Iniciar Sesión</h2>
-                <form action="/inicio-sesion" method="post">
-                    <div class="campo">
-                        <label for="email">Ingrese su email:</label>
-                        <input type="text" id="email" name="email" required>
+        <div class="col-8">
+            <div class="formulario">
+                <div class="col"></div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col-6">
+                        <h2 class="text-center">Iniciar Sesión</h2>
+                        <form action="/inicio-sesion" method="post">
+                            <div class="campo pt-4">
+                                <label for="email">Ingrese su email:</label>
+                                <input type="text" id="email" name="email" required>
+                            </div>
+                            <div class="campo">
+                                <label for="password">Ingrese contraseña:</label>
+                                <input type="password" id="password" name="password" required>
+                            </div>
+                            <div class="row">
+                                <div class="col"></div>
+                                <div class="col-12">
+                                    <div class="d-grid gap-2 pt-3">
+                                        <button class="btn btn-primary" type="submit">Iniciar Sesión</button>
+                                    </div>
+                                </div>
+                                <div class="col"></div>
+                            </div>
+                            
+                        </form>
+                        <p class="registro text-center">¿No tienes una cuenta? <a href="{{ url_for('registro')}}">Registrarse</a></p>
                     </div>
-                    <div class="campo">
-                        <label for="password">Ingrese contraseña:</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-                    <div class="row">
-                        <div class="col text-center">
-                            <button class="boton" type="submit">Iniciar Sesión</button>
-                        </div>
-                    </div>
-                    
-                </form>
-                <p class="registro text-center">¿No tienes una cuenta? <a href="{{ url_for('registro')}}">Registrarse</a></p>
+                    <div class="col"></div>
+                </div>
+                <div class="col"></div>
             </div>
-            <div class="col"></div>
         </div>
         <div class="col"></div>
     </div>
+    
 </div>
 
 {% endblock %}

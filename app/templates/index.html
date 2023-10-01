@@ -5,24 +5,32 @@
 {% block body%}
 <!-- Barra menu -->
 <div class="container-fluid">
-    <div class="barra-menu row row-cols-auto">
-        <div class="col-md-6 col-6"></div>
-        <div class="col text-center">
-            <a href="{{ url_for('index') }}">
-                <button class="boton">Inicio</button>
-            </a>
+    <div class="barra-menu row">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4 text-center">
+                <img class="logo_home mx-auto" src="{{ url_for('static', filename='img/logo2_hotel.png') }}" alt="logo">
+            </div>
+            <div class="col-4"></div>
+            <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
+                <!-- Botones -->
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        <a href="{{ url_for('index') }}">
+                            <button class="boton">Inicio</button>
+                        </a>
+                        <a href="{{ url_for('habitaciones') }}">
+                            <button class="boton">Habitaciones</button>
+                        </a>
+                        <a href="{{ url_for('login') }}">
+                            <button class="boton">Inicio Sesión</button>
+                        </a>
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    </div>
+            </div>
         </div>
-        <div class="col text-center">
-            <a href="{{ url_for('habitaciones') }}">
-                <button class="boton">Habitaciones</button>
-            </a>
-        </div>
-        <div class="col text-center">
-            <a href="{{ url_for('login') }}">
-                <button class="boton">Inicio Sesión</button>
-            </a>
-        </div>
-        <div class="col"></div>
     </div>
 </div>
 

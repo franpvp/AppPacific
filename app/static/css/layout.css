@@ -2,17 +2,18 @@ body {
     padding: 0;
     margin: 0;
     background-color: white;
+    font-family: 'Roboto Flex', sans-serif !important;
 }
 
 a{
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .barra-menu{
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(70, 122, 255, 0.9);
+    background: rgba(217, 217, 217, 0.5);
     color: white;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
@@ -140,6 +141,117 @@ a{
     padding: 15px;
     background-color: #0a58ca;
 }
+
+.fondo-home{
+    position: relative;
+    width: 100%;
+    
+}
+
+.logo_home{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px !important;
+    width: 200px;
+    height: 150px;
+}
+
+.overlay-text {
+    position: absolute; /* Hace que el texto sea absoluto para poder posicionarlo libremente */
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 50%; /* Lo posiciona en el 50% de la parte superior del div padre */
+    left: 50%; /* Lo posiciona en el 50% de la izquierda del div padre */
+    transform: translate(-50%, -50%); /* Centra el texto en ambos ejes */
+    background-color: rgba(255, 255, 255, 0.8); /* Añade un fondo semitransparente al texto para que sea legible en la imagen */
+    padding: 10px; /* Agrega un poco de espacio alrededor del texto */
+    border-radius: 5px; /* Añade esquinas redondeadas al fondo */
+}
+
+.img-home{
+    width: 100%;
+    opacity: 0.8;
+    background-size: contain;
+}
+
+.btn_reserva{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 350px !important;
+    height: 250px !important;
+    margin-top: 20px !important;
+    margin: auto;
+    background: #31A600;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.btn_reserva:hover {
+    opacity: 0.9;
+    transform: scale(1.04);
+}
+
+.btn_mis_reservas{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 350px !important;
+    height: 250px !important;
+    margin-top: 20px !important;
+    margin: auto;
+    background: #652500;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.btn_mis_reservas:hover {
+    opacity: 0.9;
+    transform: scale(1.04);
+}
+
+.btn_mod_reserva{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 350px !important;
+    height: 250px !important;
+    margin-top: 20px !important;
+    margin: auto;
+    background: #F28307;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.btn_mod_reserva:hover {
+    opacity: 0.9;
+    transform: scale(1.04);
+}
+
+.btn-grupo{
+    margin-top: 30px !important;
+}
+
+.fondo{
+    width: 100%;
+    height: 100%;
+    background: rgba(217, 217, 217, 0.5);
+    
+}
+
 
 
 

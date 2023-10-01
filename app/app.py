@@ -30,7 +30,13 @@ def index():
 
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    usuario_test = {
+        'nombre': 'Juan',
+        'apellido': 'Perez',
+        'email': 'juanperez@gmail.com',
+        'telefono': '123456789'
+    }
+    return render_template('home.html', usuario_test=usuario_test)
 
 # Se pone la ruta a la vista mediante el decorador @app.route()
 @app.route('/contacto/<nombre>/<int:edad>')
@@ -71,9 +77,14 @@ class Usuario(db.Model):
 
 # Vista Perfil de usuario (Consultando a una base de datos)
 @app.route('/perfil')
-def consultar_usuarios():
-    usuarios = Usuario.query.all()
-    return render_template('perfil.html', usuarios=usuarios)
+def perfil():
+    usuario_test = {
+        'nombre': 'Juan',
+        'apellido': 'Perez',
+        'email': 'juanperez@gmail.com',
+        'telefono': '123456789'
+    }
+    return render_template('perfil.html', usuario_test=usuario_test)
 
 # Vista Inicio Sesión
 @app.route('/inicio-sesion', methods=['GET', 'POST'])
@@ -106,16 +117,14 @@ def registro():
 #Vista Habitaciones
 @app.route('/habitaciones')
 def habitaciones():
-    data = {
-        'caracteristica':''
-    }
-    return render_template('habitaciones.html', data=data)
-data = {
+    usuario_test = {
         'nombre': 'Juan',
         'apellido': 'Perez',
         'email': 'juanperez@gmail.com',
         'telefono': '123456789'
     }
+    return render_template('habitaciones.html', usuario_test=usuario_test)
+
 # Vista Reserva
 @app.route('/reserva')
 def reserva():
@@ -130,14 +139,24 @@ def reserva():
             'max_huespedes': 2
         }
     }
-    return render_template('reserva.html', data=data)
+    usuario_test = {
+        'nombre': 'Juan',
+        'apellido': 'Perez',
+        'email': 'juanperez@gmail.com',
+        'telefono': '123456789'
+    }
+    return render_template('reserva.html', data=data, usuario_test=usuario_test)
 
 @app.route('/mis-reservas')
-def lista_reservas():
-    data = {
-
+def mis_reservas():
+    usuario_test = {
+        'nombre': 'Juan',
+        'apellido': 'Perez',
+        'email': 'juanperez@gmail.com',
+        'telefono': '123456789'
     }
-    return render_template('mis-reservas.html', data=data)
+
+    return render_template('mis-reservas.html', usuario_test=usuario_test)
 
 @app.route('/pago')
 def pago():
@@ -145,6 +164,22 @@ def pago():
 
     }
     return render_template('pago.html', data=data)
+
+@app.route('/pago-realizado')
+def pago_realizado():
+    # Datos del usuario logeado
+    usuario_test = {
+        'nombre': 'Juan',
+        'apellido': 'Perez',
+        'email': 'juanperez@gmail.com',
+        'telefono': '123456789'
+    }
+    # Datos del pago
+    datos_pago = {
+
+    }
+
+    return render_template('pago-realizado',usuario_test=usuario_test, datos_pago=datos_pago)
 
 # Vista error 404
 def pagina_no_encontrada(error):

@@ -5,25 +5,76 @@
 {% block body%}
 <!-- Barra menu -->
 <div class="container-fluid">
-    <div class="barra-menu row row-cols-auto">
-        <div class="col-md-6 col-6"></div>
-        <div class="col text-center">
-            <a href="{{ url_for('home') }}">
-                <button class="boton">Inicio</button>
-            </a>
+    <div class="barra-menu row">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4 text-center">
+                <img class="logo_home mx-auto" src="{{ url_for('static', filename='img/logo2_hotel.png') }}" alt="logo">
+            </div>
+            <div class="col-4"></div>
+            <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
+                <!-- Botones -->
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        <a href="{{ url_for('home') }}">
+                            <button class="boton">Inicio</button>
+                        </a>
+                        <a href="{{ url_for('habitaciones') }}">
+                            <button class="boton">Mis reservas</button>
+                        </a>
+                        <a href="{{ url_for('perfil') }}">
+                            <button class="boton">
+                                <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
+                                Bienvenido {{ usuario_test['nombre'] }}
+                            </button>
+                        </a>
+                        
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        
+                    </div>
+            </div>
         </div>
-        <div class="col text-center">
-            <a href="{{ url_for('habitaciones') }}">
-                <button class="boton">Habitaciones</button>
-            </a>
-        </div>
-        <div class="col text-center">
-            <a href="{{ url_for('login') }}">
-                <button class="boton">Inicio Sesión</button>
-            </a>
-        </div>
-        <div class="col"></div>
     </div>
 </div>
+
+<!-- Contenido del Home -->
+<!-- Fondo Home -->
+<div class="row">
+    <div class="col">
+        <div class="fondo-home">
+            <img class="img-home" src="{{ url_for('static', filename='img/fondo_home.jpg') }}" alt="Fondo">
+            <!-- Barra Sobre Imagen Home -->
+            <div class="overlay-text">
+                <h1>Bienvenido a Hotel Pacific Reef</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Botón para reservar -->
+<div class="container-fluid fondo">
+    <div class="row justify-content-center"> <!-- Centra horizontalmente -->
+        <div class="col-12 col-md-5 col-sm-12 text-center mb-3 mx-auto">
+            <a href="/reserva" class="btn_reserva">
+                <h1>Reservar</h1>
+            </a>
+        </div>
+        <!-- Botón Mis Reservas -->
+        <div class="col-12 col-md-5 col-sm-12 text-center mb-3 mx-auto">
+            <a href="/mis-reservas" class="btn_mis_reservas">
+                <h1>Mis Reservas</h1>
+            </a>
+        </div>
+        <!-- Botón Modificar o Editar Reserva -->
+        <div class="col-12 col-md-5 col-sm-12 text-center mx-auto">
+            <div class="btn_mod_reserva">
+                <h1>Modificar o Eliminar Reserva</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {% endblock %}

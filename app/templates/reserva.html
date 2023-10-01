@@ -5,24 +5,35 @@
 {% block body%}
 <!-- Barra menu -->
 <div class="container-fluid">
-    <div class="barra-menu row row-cols-auto">
-        <div class="col-sm-6 col-md-6 col-12"></div>
-        <div class="col text-center">
-            <a href="{{ url_for('home') }}">
-                <button class="boton">Inicio</button>
-            </a>
+    <div class="barra-menu row">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4 text-center">
+                <img class="logo_home mx-auto" src="{{ url_for('static', filename='img/logo2_hotel.png') }}" alt="logo">
+            </div>
+            <div class="col-4"></div>
+            <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
+                <!-- Botones -->
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        <a href="{{ url_for('home') }}">
+                            <button class="boton">Inicio</button>
+                        </a>
+                        <a href="{{ url_for('mis_reservas') }}">
+                            <button class="boton">Mis reservas</button>
+                        </a>
+                        <button class="boton">
+                            <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
+                            Bienvenido {{ usuario_test['nombre'] }}
+                        </button>
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        
+                    </div>
+            </div>
         </div>
-        <div class="col text-center">
-            <a href="{{ url_for('lista_reservas') }}">
-                <button class="boton">Mis reservas</button>
-            </a>
-        </div>
-        <div class="col text-center">
-            <button class="boton">
-                <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
-                Bienvenido {{ data['nombre'] }}</button>
-        </div>
-        <div class="col"></div>
     </div>
 </div>
 
@@ -184,14 +195,14 @@
                                 <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia">0</span> días</p></li>
                                 <li class="list-group-item"><p>Total: <span id="precio_matrimonial">0</span></p></p></li>
                                 <li class="list-group-item"><p>Pago Reserva(30% del total):$ <span id="precio_inicial">0</span></p></p></li>
-                                <li class="list-group-item">And a fifth one</li>
+                                <button id="btn_eliminar1" class="btn btn-danger" type="submit">Eliminar Selección</button>
                             </ul>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col"></div>
                         <div class="col-8">
-                            <div class="d-grid gap-2 pt-3 pb-3">
+                            <div class="d-grid gap-2 pt-4 pb-4">
                                 <button class="btn btn-primary" type="submit">Reservar</button>
                             </div>
                         </div>
@@ -203,14 +214,12 @@
                     <div class="col-12 d-flex justify-content-center">
                         <div class="card text-center" style="width: 18rem;">
                             <div class="card-body">
-                                <div class="barra-titulo-card">
-                                    <h4 class="card-title text-center">Detalle Reserva</h4>
-                                </div>
+                                <h4 class="card-title text-center">Detalle Reserva</h4>
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia">0</span> días</p></li>
-                                    <li class="list-group-item"><p>Total: $ <span id="precio_individual">0</span> CLP</p></p></li>
-                                    <li class="list-group-item"><p>Pago Reserva(30% del total):$ <span id="precio_inicial">0</span> CLP</p></p></li>
-                                    <li class="list-group-item">A fourth item</li>
+                                    <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia2">0</span> días</p></li>
+                                    <li class="list-group-item"><p>Total: $ <span id="precio_individual">0</span></p></p></li>
+                                    <li class="list-group-item"><p>Pago Reserva(30% del total):$ <span id="precio_inicial2">0</span> CLP</p></p></li>
+                                    <button id="btn_eliminar2" class="btn btn-danger" type="submit">Eliminar Selección2</button>
                                 </ul>
                             </div>
                         </div>
@@ -245,8 +254,8 @@
     fechaIngreso.addEventListener('input', actualizarNochesEstadia);
     fechaSalida.addEventListener('input', actualizarNochesEstadia);
 
-    btnSeleccionar.addEventListener('click', calcularNochesEstadia);
-    btnSeleccionar2.addEventListener('click', calcularNochesEstadia);
+    btnSeleccionar.addEventListener('click', calcularNochesEstadiaMatrimonial);
+    btnSeleccionar2.addEventListener('click', calcularNochesEstadiaIndividual);
 
     $('#datetimepicker_ingreso').datetimepicker({
         format: 'DD-MM-YYYY',
@@ -269,26 +278,24 @@
         // Validar si se han ingresado las fechas y la cantidad de huéspedes
         if (fechaIngreso && fechaSalida && cantidadHuespedes) {
             if(btnSeleccionar){
-                document.getElementById('detalle_reserva').style.display = 'block';
-            } else {
-                document.getElementById('detalle_reserva2').style.display = 'block';
+                // document.getElementById('detalle_reserva').style.display = 'block';
+            } if(btnSeleccionar2) {
+                // document.getElementById('detalle_reserva2').style.display = 'block';
             }
             
-        } else {
-            
+        } else{
+            alert('Ingrese todos los campos');
         }
     });
-
-    function calcularNochesEstadia() {
-        console.log('Llegue a método calcularNochesEstadia')
+    // Función calcularNochesEstadiaMatrimonial
+    function calcularNochesEstadiaMatrimonial() {
+        console.log('Llegue a método calcularNochesEstadiaMatrimonial')
         var fechaIngresoValue = fechaIngreso.value;
         var fechaSalidaValue = fechaSalida.value;
         var precio_noche_matrimonial = 100000;
-        var precio_noche_individual = 80000;
-        var totalPrecioIndividual = document.getElementById('precio_individual');
         var totalPrecioMatrimonial = document.getElementById('precio_matrimonial');
         var totalPrecioInicial = document.getElementById('precio_inicial');
-        var precioUnitario = 0; // Inicializamos el precio unitario en 0
+        var precioUnitario = 0;
 
         if (fechaIngresoValue && fechaSalidaValue) {
             // Separar las partes de la fecha
@@ -307,27 +314,69 @@
 
             // Verificar cuál botón se ha clicado y establecer el precio unitario correspondiente
             if (btnSeleccionar.id === 'btn_seleccionar') {
+                console.log('Entre el detalle del primer boton')
                 precioUnitario = precio_noche_matrimonial;
                 // Calcular 30% del total
-                precioInicial = precioUnitario*0.3;
+                precioInicial = precioUnitario * 0.3;
                 // Calcular el total
                 totalPrecioMatrimonial.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
-                totalPrecioIndividual.textContent = ''; // Dejar el total para la habitación individual en blanco
-                totalPrecioInicial.textContent = '$ ' + (noches * precioUnitario*0.3).toFixed(0) + ' CLP';
-            } else if (btnSeleccionar2.id === 'btn_seleccionar2') {
-                precioUnitario = precio_noche_individual;
-                // Calcular 30% del total
-                precioInicial = precioUnitario*0.3;
-                // Calcular el total
-                totalPrecioIndividual.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
-                totalPrecioMatrimonial.textContent = ''; // Dejar el total para la habitación matrimonial en blanco
-                totalPrecioInicial.textContent = '$ ' + (noches * precioUnitario*0.3).toFixed(0) + ' CLP';
+                totalPrecioInicial.textContent = '$ ' + (noches * precioUnitario * 0.3).toFixed(0) + ' CLP';
+                // Se habilita el div con display none
+                document.getElementById('detalle_reserva').style.display = 'block';
+                // Si hace click en el boton eliminar el div cambiar a display none
+                document.getElementById('btn_eliminar1').addEventListener('click', eliminarDetalle1)
             }
-
             // Actualizar los elementos HTML con los valores calculados
             nochesEstadia.textContent = noches;
         } else {
             nochesEstadia.textContent = '0';
+        }
+    }
+    // Función calcularNochesEstadiaIndividual
+    function calcularNochesEstadiaIndividual() {
+        console.log('Llegue a método calcularNochesEstadiaIndividual')
+        var fechaIngresoValue = fechaIngreso.value;
+        var fechaSalidaValue = fechaSalida.value;
+        var precio_noche_individual = 80000;
+        var totalPrecioIndividual = document.getElementById('precio_individual');
+        var totalPrecioInicial2 = document.getElementById('precio_inicial2');
+        var nochesEstadia2 = document.getElementById('noches_estadia2');
+        var precioUnitario = 0;
+
+        if (fechaIngresoValue && fechaSalidaValue) {
+            // Separar las partes de la fecha
+            var fechaIngresoParts = fechaIngresoValue.split('-');
+            var fechaSalidaParts = fechaSalidaValue.split('-');
+
+            // Crear objetos Date
+            var fechaIngresoDate = new Date(fechaIngresoParts[2], fechaIngresoParts[1] - 1, fechaIngresoParts[0]);
+            var fechaSalidaDate = new Date(fechaSalidaParts[2], fechaSalidaParts[1] - 1, fechaSalidaParts[0]);
+
+            // Calcular la diferencia en milisegundos
+            var diferencia = fechaSalidaDate - fechaIngresoDate;
+
+            // Calcular el número de noches (dividiendo la diferencia entre milisegundos en días)
+            var noches = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+            console.log('Noches estadía: ' + noches);
+
+            // Verificar cuál botón se ha clicado y establecer el precio unitario correspondiente
+            if (btnSeleccionar2.id === 'btn_seleccionar2') {
+                console.log('Entre el detalle del segundo boton')
+                precioUnitario = precio_noche_individual;
+                // Calcular 30% del total
+                precioInicial = precioUnitario * 0.3;
+                // Calcular el total
+                totalPrecioIndividual.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
+                totalPrecioInicial2.textContent = '$ ' + (noches * precioUnitario * 0.3).toFixed(0) + ' CLP';
+                // Se habilita el div con display none
+                document.getElementById('detalle_reserva2').style.display = 'block';
+                // Si hace click en el boton eliminar el div cambiar a display none
+                document.getElementById('btn_eliminar2').addEventListener('click',eliminarDetalle2)
+            }
+            nochesEstadia2.textContent = noches;
+            
+        } else {
+            nochesEstadia2.textContent = '0';
         }
     }
 
@@ -336,6 +385,16 @@
         calcularNochesEstadia();
         
     }
+    // Función para eliminar detalle de reserva
+    function eliminarDetalle1(){
+        document.getElementById('detalle_reserva').style.display = 'none';
+        
+    }
+
+    function eliminarDetalle2(){
+        document.getElementById('detalle_reserva2').style.display = 'none';
+
+        }
 </script>
 
 

@@ -6,107 +6,126 @@
 
 <!-- Barra menu -->
 <div class="container-fluid">
-    <div class="barra-menu row row-cols-auto">
-        <div class="col-6"></div>
-        <div class="col text-center">
-            <a href="{{ url_for('index') }}">
-                <button class="boton">Inicio</button>
-            </a>
-        </div>
-        <div class="col text-center">
-            <a href="{{ url_for('habitaciones') }}">
-                <button class="boton">Habitaciones</button>
-            </a>
-        </div>
-        <div class="col text-center">
-            <a href="{{ url_for('login') }}">
-                <button class="boton">Inicio Sesión</button>
-            </a>
+    <div class="barra-menu row">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4 text-center">
+                <img class="logo_home mx-auto" src="{{ url_for('static', filename='img/logo2_hotel.png') }}" alt="logo">
+            </div>
+            <div class="col-4"></div>
+            <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
+                <!-- Botones -->
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        <a href="{{ url_for('index') }}">
+                            <button class="boton">Inicio</button>
+                        </a>
+                        <a href="{{ url_for('habitaciones') }}">
+                            <button class="boton">Habitaciones</button>
+                        </a>
+                        <a href="{{ url_for('login') }}">
+                            <button class="boton">Inicio Sesión</button>
+                        </a>
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    </div>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Formulario registro -->
-<div class="container-fluid">
-    <div class="formulario">
-        <h2 class="titulo-registro">Registro</h2>
-        <form action="#" method="post">
-            <!-- Campo rut -->
-            <div class="campo row">
-                <div class="col"></div>
-                <div class="col-6">
-                    <label for="rut">Rut:</label>
-                    <input class="text-center" type="text" id="usuario" name="usuario" placeholder="Ingrese su rut:"required>
-                </div>
-                <div class="col"></div>
-                
+<div class="container-fluid pt-5">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-8">
+            <div class="formulario">
+                <h2 class="titulo-registro">Registro</h2>
+                <form action="#" method="post">
+                    <!-- Campo rut -->
+                    <div class="campo row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <label for="rut">Rut:</label>
+                            <input class="text-center" type="text" id="usuario" name="usuario" placeholder="Ingrese su rut:"required>
+                        </div>
+                        <div class="col"></div>
+                        
+                    </div>
+                    <!-- Campo nombre -->
+                    <div class="campo row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <label for="firstname">Nombre:</label>
+                            <input class="text-center" type="text" id="nombre" name="password" placeholder="Ingrese su nombre:" required>
+                        </div>
+                        
+                        <div class="col"></div>
+                    </div>
+                    <!-- Campo apellido -->
+                    <div class="campo row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <label for="lastname">Apellido:</label>
+                            <input class="text-center" type="text" id="apellido" name="password" placeholder="Ingrese su apellido:" required>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <!-- Campo telefono -->
+                    <div class="campo row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <label for="phone">Telefono:</label>
+                            <input class="text-center" type="text" id="telefono" name="password" placeholder="Ingrese su telefono:" required>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <!-- Campo e-mail -->
+                    <div class="campo row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <label for="email">E-mail:</label>
+                            <input class="text-center" type="text" id="email" name="password" placeholder="Ingrese su e-mail:" required>
+                        </div>
+                        
+                        <div class="col"></div>
+                    </div>
+                    <!-- Campo contraseña -->
+                    <div class="campo row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <label for="password">Contraseña:</label>
+                            <input class="text-center" type="password" id="password" name="password" placeholder="Ingrese su contraseña:" required>
+                        </div>
+                        
+                        <div class="col"></div>
+                    </div>
+                    <!-- Campo confirmar contraseña -->
+                    <div class="campo row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <label for="password">Confirme contraseña:</label>
+                            <input class="text-center" type="password" id="password2" name="password" placeholder="Reingrese contraseña:" required>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <div class="d-grid gap-2 pt-3">
+                                <button class="btn btn-primary" type="submit">Registrarse</button>
+                            </div>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    
+                </form>
             </div>
-            <!-- Campo nombre -->
-            <div class="campo row">
-                <div class="col"></div>
-                <div class="col-6">
-                    <label for="firstname">Nombre:</label>
-                    <input class="text-center" type="text" id="nombre" name="password" placeholder="Ingrese su nombre:" required>
-                </div>
-                
-                <div class="col"></div>
-            </div>
-            <!-- Campo apellido -->
-            <div class="campo row">
-                <div class="col"></div>
-                <div class="col-6">
-                    <label for="lastname">Apellido:</label>
-                    <input class="text-center" type="text" id="apellido" name="password" placeholder="Ingrese su apellido:" required>
-                </div>
-                <div class="col"></div>
-            </div>
-            <!-- Campo telefono -->
-            <div class="campo row">
-                <div class="col"></div>
-                <div class="col-6">
-                    <label for="phone">Telefono:</label>
-                    <input class="text-center" type="text" id="telefono" name="password" placeholder="Ingrese su telefono:" required>
-                </div>
-                <div class="col"></div>
-            </div>
-            <!-- Campo e-mail -->
-            <div class="campo row">
-                <div class="col"></div>
-                <div class="col-6">
-                    <label for="email">E-mail:</label>
-                    <input class="text-center" type="text" id="email" name="password" placeholder="Ingrese su e-mail:" required>
-                </div>
-                
-                <div class="col"></div>
-            </div>
-            <!-- Campo contraseña -->
-            <div class="campo row">
-                <div class="col"></div>
-                <div class="col-6">
-                    <label for="password">Contraseña:</label>
-                    <input class="text-center" type="password" id="password" name="password" placeholder="Ingrese su contraseña:" required>
-                </div>
-                
-                <div class="col"></div>
-            </div>
-            <!-- Campo confirmar contraseña -->
-            <div class="campo row">
-                <div class="col"></div>
-                <div class="col-6">
-                    <label for="password">Confirme contraseña:</label>
-                    <input class="text-center" type="password" id="password2" name="password" placeholder="Reingrese contraseña:" required>
-                </div>
-                <div class="col"></div>
-            </div>
-            <div class="row">
-                <div class="col text-center">
-                    <button class="boton" type="submit">Registrarse</button>
-                </div>
-                
-            </div>
-            
-        </form>
+        </div>
+        <div class="col"></div>
     </div>
+    
 </div>
 
 {% endblock %}
