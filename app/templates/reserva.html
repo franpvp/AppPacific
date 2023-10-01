@@ -163,7 +163,7 @@
                                         <div class="col"></div>
                                         <div class="col-8">
                                             <div class="d-grid gap-2 pt-3">
-                                                <button id="btn2_seleccionar" class="btn btn-primary" type="submit">Seleccionar</button>
+                                                <button id="btn_seleccionar2" class="btn btn-primary" type="submit">Seleccionar</button>
                                             </div>
                                         </div>
                                         <div class="col"></div>
@@ -179,9 +179,23 @@
                         <div class="card text-center" style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">Detalle Reserva</h5>
-                                <p class="card-text">Total: $ {{ data['standard_matrimonial'].precio }} CLP</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia">0</span> días</p></li>
+                                <li class="list-group-item"><p>Total: <span id="precio_matrimonial">0</span></p></p></li>
+                                <li class="list-group-item"><p>Pago Reserva(30% del total):$ <span id="precio_inicial">0</span></p></p></li>
+                                <li class="list-group-item">And a fifth one</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <div class="d-grid gap-2 pt-3 pb-3">
+                                <button class="btn btn-primary" type="submit">Reservar</button>
                             </div>
                         </div>
+                        <div class="col"></div>
                     </div>
                 </div>
                 <!-- Caso Detalle Reserva para Standard Twin -->
@@ -193,31 +207,46 @@
                                     <h4 class="card-title text-center">Detalle Reserva</h4>
                                 </div>
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">Total: $ {{ data['standard_twin'].precio }} CLP</li>
-                                    <li class="list-group-item">A second item</li>
-                                    <li class="list-group-item">A third item</li>
+                                    <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia">0</span> días</p></li>
+                                    <li class="list-group-item"><p>Total: $ <span id="precio_individual">0</span> CLP</p></p></li>
+                                    <li class="list-group-item"><p>Pago Reserva(30% del total):$ <span id="precio_inicial">0</span> CLP</p></p></li>
                                     <li class="list-group-item">A fourth item</li>
-                                    <li class="list-group-item">And a fifth one</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                            <div class="d-grid gap-2 pt-3 pb-3">
+                                <button class="btn btn-primary" type="submit">Reservar</button>
+                            </div>
+                        </div>
+                        <div class="col"></div>
+                    </div>
                 </div>
             </div>
+            
         </form>
     </div>
 </div>
 
-<script>
-    var fechaActual = new Date();
-    var dia = fechaActual.getDate();
-    var mes = fechaActual.getMonth() + 1; // El mes se cuenta desde 0 (enero) hasta 11 (diciembre)
-    var año = fechaActual.getFullYear();
 
-    var fechaFormateada = (dia < 10 ? "0" + dia : dia) + "-" + (mes < 10 ? "0" + mes : mes) + "-" + año;
-    // Establecer el valor mínimo en los campos de fecha
-    document.getElementById('fecha_ingreso').setAttribute('min', fechaFormateada);
-    document.getElementById('fecha_salida').setAttribute('min', fechaFormateada);
+<script>
+    var fechaIngreso = document.getElementById('fecha_ingreso');
+    var fechaSalida = document.getElementById('fecha_salida');
+    
+    // Obtener el elemento donde se mostrará el número de noches de estadía
+    var nochesEstadia = document.getElementById('noches_estadia');
+    var btnSeleccionar = document.getElementById('btn_seleccionar');
+    var btnSeleccionar2 = document.getElementById('btn_seleccionar2');
+    
+    // Escuchar el evento de cambio en los campos de entrada de fecha
+    fechaIngreso.addEventListener('input', actualizarNochesEstadia);
+    fechaSalida.addEventListener('input', actualizarNochesEstadia);
+
+    btnSeleccionar.addEventListener('click', calcularNochesEstadia);
+    btnSeleccionar2.addEventListener('click', calcularNochesEstadia);
 
     $('#datetimepicker_ingreso').datetimepicker({
         format: 'DD-MM-YYYY',
@@ -239,12 +268,74 @@
 
         // Validar si se han ingresado las fechas y la cantidad de huéspedes
         if (fechaIngreso && fechaSalida && cantidadHuespedes) {
-            // Mostrar el div con el detalle de la reserva
-            document.getElementById('detalle_reserva').style.display = 'block';
+            if(btnSeleccionar){
+                document.getElementById('detalle_reserva').style.display = 'block';
+            } else {
+                document.getElementById('detalle_reserva2').style.display = 'block';
+            }
+            
         } else {
-            alert('Por favor, complete todas las fechas y la cantidad de huéspedes.');
+            
         }
     });
+
+    function calcularNochesEstadia() {
+        console.log('Llegue a método calcularNochesEstadia')
+        var fechaIngresoValue = fechaIngreso.value;
+        var fechaSalidaValue = fechaSalida.value;
+        var precio_noche_matrimonial = 100000;
+        var precio_noche_individual = 80000;
+        var totalPrecioIndividual = document.getElementById('precio_individual');
+        var totalPrecioMatrimonial = document.getElementById('precio_matrimonial');
+        var totalPrecioInicial = document.getElementById('precio_inicial');
+        var precioUnitario = 0; // Inicializamos el precio unitario en 0
+
+        if (fechaIngresoValue && fechaSalidaValue) {
+            // Separar las partes de la fecha
+            var fechaIngresoParts = fechaIngresoValue.split('-');
+            var fechaSalidaParts = fechaSalidaValue.split('-');
+
+            // Crear objetos Date
+            var fechaIngresoDate = new Date(fechaIngresoParts[2], fechaIngresoParts[1] - 1, fechaIngresoParts[0]);
+            var fechaSalidaDate = new Date(fechaSalidaParts[2], fechaSalidaParts[1] - 1, fechaSalidaParts[0]);
+
+            // Calcular la diferencia en milisegundos
+            var diferencia = fechaSalidaDate - fechaIngresoDate;
+
+            // Calcular el número de noches (dividiendo la diferencia entre milisegundos en días)
+            var noches = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+
+            // Verificar cuál botón se ha clicado y establecer el precio unitario correspondiente
+            if (btnSeleccionar.id === 'btn_seleccionar') {
+                precioUnitario = precio_noche_matrimonial;
+                // Calcular 30% del total
+                precioInicial = precioUnitario*0.3;
+                // Calcular el total
+                totalPrecioMatrimonial.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
+                totalPrecioIndividual.textContent = ''; // Dejar el total para la habitación individual en blanco
+                totalPrecioInicial.textContent = '$ ' + (noches * precioUnitario*0.3).toFixed(0) + ' CLP';
+            } else if (btnSeleccionar2.id === 'btn_seleccionar2') {
+                precioUnitario = precio_noche_individual;
+                // Calcular 30% del total
+                precioInicial = precioUnitario*0.3;
+                // Calcular el total
+                totalPrecioIndividual.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
+                totalPrecioMatrimonial.textContent = ''; // Dejar el total para la habitación matrimonial en blanco
+                totalPrecioInicial.textContent = '$ ' + (noches * precioUnitario*0.3).toFixed(0) + ' CLP';
+            }
+
+            // Actualizar los elementos HTML con los valores calculados
+            nochesEstadia.textContent = noches;
+        } else {
+            nochesEstadia.textContent = '0';
+        }
+    }
+
+    // Función para actualizar el número de noches de estadía en tiempo real
+    function actualizarNochesEstadia() {
+        calcularNochesEstadia();
+        
+    }
 </script>
 
 

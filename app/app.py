@@ -121,12 +121,12 @@ data = {
 def reserva():
     data = {
         'standard_matrimonial': {
-            'precio': 100000,
+            'precio_noche': 100000,
             'max_huespedes': 2
             
         },
         'standard_twin': {
-            'precio': 80000,
+            'precio_noche': 80000,
             'max_huespedes': 2
         }
     }
