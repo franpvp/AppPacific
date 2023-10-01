@@ -6,7 +6,7 @@
 <!-- Barra menu -->
 <div class="container-fluid">
     <div class="barra-menu row row-cols-auto">
-        <div class="col-md-6 col-6"></div>
+        <div class="col-sm-6 col-md-6 col-12"></div>
         <div class="col text-center">
             <a href="{{ url_for('home') }}">
                 <button class="boton">Inicio</button>
@@ -33,62 +33,217 @@
             <h1 class="titulo-reserva text-center">Reserva</h1>
         </div>
     </div>
-    <!-- Input Selección de fechas -->
+    <!-- Formulario de reserva -->
     <div class="container">
-        <div class="form-group">
-            <label for="fecha">Seleccione una fecha:</label>
-            <div class="input-group date" id="datetimepicker" data-target-input="nearest">
-                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker" id="fecha"/>
-                <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
-                    <div class="input-group-text">
-                        <img class="calendar" src="{{ url_for('static', filename='img/calendar.png') }}">
+        <form id="reserva_form" action="/pago" method="post">
+            <div class="form-group pt-3">
+                <!-- Input Fecha Ingreso -->
+                <label for="fecha_ingreso">Seleccione fecha llegada:</label>
+                <div class="input-group date" id="datetimepicker_ingreso" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker_ingreso" id="fecha_ingreso" required/>
+                    <div class="input-group-append" data-target="#datetimepicker_ingreso" data-toggle="datetimepicker">
+                        <div class="input-group-text">
+                            <img class="calendar" src="{{ url_for('static', filename='img/calendar.png') }}">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- Input cantidad de huéspedes -->
-            <div class="input-huespedes">
-                <label for="fecha">Ingrese cantidad de huéspedes:</label>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Seleccione</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <!-- Información habitaciones -->
-    <div class="row">
-        <div class="col"></div>
-        <div class="col">
-            <div class="card mb-3 text-center" style="width: 100%;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="{{ url_for('static', filename='img/standard_matrimonial.jpg')}}" class="img-fluid rounded-start" alt="...">
+                <!-- Input Fecha Salida -->
+                <label class="pt-3" for="fecha_salida">Seleccione fecha salida:</label>
+                <div class="input-group date" id="datetimepicker_salida" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker_salida" id="fecha_salida" required/>
+                    <div class="input-group-append" data-target="#datetimepicker_salida" data-toggle="datetimepicker">
+                        <div class="input-group-text">
+                            <img class="calendar" src="{{ url_for('static', filename='img/calendar.png') }}">
+                        </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Standard Matrimonial</h5>
-                            <h6 class="card-title">Standard Matrimonial</h6>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                </div>
+    
+                <!-- Input cantidad de huéspedes -->
+                <div class="input-huespedes">
+                    <label for="fecha">Ingrese cantidad de huéspedes:</label>
+                    <select class="form-select" id="cantidad_huespedes" name="cantidad_huespedes" aria-label="Default select example" required>
+                        <option value="" selected disabled>Seleccione</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                
+            </div>
+            <!-- Habitación Standard Matrimonial -->
+            <div class="card_container row">
+                <div class="col-12">
+                    <div class="card mb-3" style="width: 100%;">
+                        <div class="row g-0">
+                            <div class="img-card col-md-6">
+                                <img src="{{ url_for('static', filename='img/standard_matrimonial.jpg')}}" class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="barra-titulo-card">
+                                                <h4 class="card-title text-center">Standard Matrimonial</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h5 class="card-title pt-3 text-center">1 Cama King Size - 1 Baño</h5>
+                                    <div class="row">
+                                        <div class="col"></div>
+                                        <div class="col-8">
+                                            <h5 class="card-title pt-3">Contiene: </h5>
+                                            <ol class="list-group text-center">
+                                                <li class="list-group-item">No fumadores</li>
+                                                <li class="list-group-item">Conexión inalámbrica a internet</li>
+                                                <li class="list-group-item">Ropa de cama y toallas</li>
+                                            </ol>
+                                        </div>
+                                        <div class="col"></div>
+                                    </div>
+                                    <div class="row text-center pt-3">
+                                        <div class="col">
+                                            <a class="card-text pt-3" href="{{ url_for('habitaciones')}}">
+                                                <small class="text-body-secondary">Más información</small>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col"></div>
+                                        <div class="col-8">
+                                            <div class="d-grid gap-2 pt-3">
+                                                <button id="btn_seleccionar" class="btn btn-primary" type="submit">Seleccionar</button>
+                                            </div>
+                                        </div>
+                                        <div class="col"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col"></div>
+            <!-- Habitacion Standard Twin -->
+            <div class="card_container row">
+                <div class="col-12">
+                    <div class="card mb-3" style="width: 100%;">
+                        <div class="row">
+                            <div class="img-card col-md-6">
+                                <img src="{{ url_for('static', filename='img/camas-individuales.jpg')}}" class="img-card img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="barra-titulo-card">
+                                                <h4 class="card-title text-center">Standard Twin</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h5 class="card-title pt-3 text-center">2 Camas individuales - 1 Baño</h5>
+                                    <div class="row">
+                                        <div class="col"></div>
+                                        <div class="col-8">
+                                            <h5 class="card-title pt-3">Contiene: </h5>
+                                            <ol class="list-group text-center">
+                                                <li class="list-group-item">Vista al lago</li>
+                                                <li class="list-group-item">No fumadores</li>
+                                                <li class="list-group-item">Conexión inalámbrica a internet</li>
+                                                <li class="list-group-item">Baño</li>
+                                            </ol>
+                                        </div>
+                                        <div class="col"></div>
+                                    </div>
+                                    <div class="row text-center pt-3">
+                                        <div class="col">
+                                            <a class="card-text pt-3" href="{{ url_for('habitaciones') }}">
+                                                <small class="text-body-secondary">Más información</small>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col"></div>
+                                        <div class="col-8">
+                                            <div class="d-grid gap-2 pt-3">
+                                                <button id="btn2_seleccionar" class="btn btn-primary" type="submit">Seleccionar</button>
+                                            </div>
+                                        </div>
+                                        <div class="col"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Caso Detalle Reserva para Standard Matrimonial -->
+                <div id="detalle_reserva" class="row" style="display: none;">
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="card text-center" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">Detalle Reserva</h5>
+                                <p class="card-text">Total: $ {{ data['standard_matrimonial'].precio }} CLP</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Caso Detalle Reserva para Standard Twin -->
+                <div id="detalle_reserva2" class="row p-3" style="display: none;">
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="card text-center" style="width: 18rem;">
+                            <div class="card-body">
+                                <div class="barra-titulo-card">
+                                    <h4 class="card-title text-center">Detalle Reserva</h4>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Total: $ {{ data['standard_twin'].precio }} CLP</li>
+                                    <li class="list-group-item">A second item</li>
+                                    <li class="list-group-item">A third item</li>
+                                    <li class="list-group-item">A fourth item</li>
+                                    <li class="list-group-item">And a fifth one</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-    
 </div>
 
 <script>
-    // Inicializa Tempus Dominus Datepicker
-    $(function () {
-        $('#datetimepicker').datetimepicker({
-            format: 'YYYY-MM-DD', // Formato de fecha deseado
-        });
+    var fechaActual = new Date();
+    var dia = fechaActual.getDate();
+    var mes = fechaActual.getMonth() + 1; // El mes se cuenta desde 0 (enero) hasta 11 (diciembre)
+    var año = fechaActual.getFullYear();
+
+    var fechaFormateada = (dia < 10 ? "0" + dia : dia) + "-" + (mes < 10 ? "0" + mes : mes) + "-" + año;
+    // Establecer el valor mínimo en los campos de fecha
+    document.getElementById('fecha_ingreso').setAttribute('min', fechaFormateada);
+    document.getElementById('fecha_salida').setAttribute('min', fechaFormateada);
+
+    $('#datetimepicker_ingreso').datetimepicker({
+        format: 'DD-MM-YYYY',
+        minDate: moment().startOf('day') // Establecer el mínimo a la fecha actual
+    });
+
+    $('#datetimepicker_salida').datetimepicker({
+        format: 'DD-MM-YYYY',
+        minDate: moment().startOf('day') // Establecer el mínimo a la fecha actual
+    });
+
+    document.getElementById('reserva_form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar el envío del formulario por defecto
+        
+        // Obtener los valores de las fechas y la cantidad de huéspedes
+        var fechaIngreso = document.getElementById('fecha_ingreso').value;
+        var fechaSalida = document.getElementById('fecha_salida').value;
+        var cantidadHuespedes = document.getElementById('cantidad_huespedes').value;
+
+        // Validar si se han ingresado las fechas y la cantidad de huéspedes
+        if (fechaIngreso && fechaSalida && cantidadHuespedes) {
+            // Mostrar el div con el detalle de la reserva
+            document.getElementById('detalle_reserva').style.display = 'block';
+        } else {
+            alert('Por favor, complete todas las fechas y la cantidad de huéspedes.');
+        }
     });
 </script>
 

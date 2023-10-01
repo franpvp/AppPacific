@@ -126,5 +126,20 @@ a{
     margin-top: 20px;
 }
 
+.card_container{
+    margin-top: 30px !important;
+}
+
+.barra-titulo-card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    color: white;
+    width: auto;
+    padding: 15px;
+    background-color: #0a58ca;
+}
+
 
 

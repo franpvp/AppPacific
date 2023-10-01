@@ -72,10 +72,8 @@ class Usuario(db.Model):
 # Vista Perfil de usuario (Consultando a una base de datos)
 @app.route('/perfil')
 def consultar_usuarios():
-    perfil = Usuario.query.all()
-    return render_template('perfil.html', perfil=perfil)
-
-
+    usuarios = Usuario.query.all()
+    return render_template('perfil.html', usuarios=usuarios)
 
 # Vista Inicio Sesión
 @app.route('/inicio-sesion', methods=['GET', 'POST'])
@@ -92,7 +90,7 @@ def login():
 
         # Validación de credenciales
         if email == usuarios['email'] and contrasena == usuarios['password']:
-            # Autenticación exitosa, redirige a la página de inicio
+            # Autenticación exitosa, redirige a la página de reserva
             return redirect(url_for('reserva'))
         else:
             # Credenciales incorrectas, muestra un mensaje de error
@@ -109,18 +107,28 @@ def registro():
 @app.route('/habitaciones')
 def habitaciones():
     data = {
-
+        'caracteristica':''
     }
     return render_template('habitaciones.html', data=data)
-
-# Vista Reserva
-@app.route('/reserva')
-def reserva():
-    data = {
+data = {
         'nombre': 'Juan',
         'apellido': 'Perez',
         'email': 'juanperez@gmail.com',
         'telefono': '123456789'
+    }
+# Vista Reserva
+@app.route('/reserva')
+def reserva():
+    data = {
+        'standard_matrimonial': {
+            'precio': 100000,
+            'max_huespedes': 2
+            
+        },
+        'standard_twin': {
+            'precio': 80000,
+            'max_huespedes': 2
+        }
     }
     return render_template('reserva.html', data=data)
 
@@ -130,6 +138,13 @@ def lista_reservas():
 
     }
     return render_template('mis-reservas.html', data=data)
+
+@app.route('/pago')
+def pago():
+    data = {
+
+    }
+    return render_template('pago.html', data=data)
 
 # Vista error 404
 def pagina_no_encontrada(error):
