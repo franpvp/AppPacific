@@ -14,23 +14,29 @@
             <div class="col-4"></div>
             <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
                 <!-- Botones -->
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        <a href="{{ url_for('home') }}">
-                            <button class="boton">Inicio</button>
-                        </a>
-                        <a href="{{ url_for('mis_reservas') }}">
-                            <button class="boton">Mis reservas</button>
-                        </a>
-                        <button class="boton">
+                <div class="col-12 d-flex justify-content-center">
+                    <a href="{{ url_for('home') }}">
+                        <button class="boton">Inicio</button>
+                    </a>
+                    <a href="{{ url_for('mis_reservas') }}">
+                        <button class="boton">Mis reservas</button>
+                    </a>
+                    <div class="dropdown">
+                        <button class="boton dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
                             <small id="nombre-logo"></small>
                         </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="#">Configuración</a></li>
+                            <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+                        </ul>
                     </div>
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        
-                    </div>
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                    </div>
+                </div>
+                <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    
+                </div>
+                <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                </div>
             </div>
         </div>
     </div>
@@ -137,6 +143,7 @@
         document.getElementById('apellido').textContent = apellido;
         document.getElementById('rut').textContent = rut;
         document.getElementById('telefono').textContent = telefono;
+        document.getElementById('nombre').textContent = nombre;
         document.getElementById('nombre-logo').textContent = 'Bienvenido ' + nombre;
     });
 
