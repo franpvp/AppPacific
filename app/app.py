@@ -1,4 +1,5 @@
 # Se importa la clase Flask
+import json
 from flask import Flask, redirect, render_template, request, send_from_directory, url_for
 from flask_sqlalchemy import SQLAlchemy
 
@@ -17,6 +18,10 @@ def before_request():
 def after_request(response):
     print("Después de la petición")
     return response
+
+datos = {
+        'fecha_ingreso': ''
+        }
 
 #Decorador con la ruta raiz
 @app.route('/')
@@ -158,15 +163,24 @@ def mis_reservas():
 
     return render_template('mis-reservas.html', usuario_test=usuario_test)
 
-@app.route('/pago')
-def pago():
-    data = {
-
+@app.route('/pago-reserva', methods=['GET'])
+def pago_reserva():
+    usuario_test = {
+        'nombre': 'Juan',
+        'apellido': 'Perez',
+        'email': 'juanperez@gmail.com',
+        'telefono': '123456789'
     }
-    return render_template('pago.html', data=data)
+    datos_str = request.args.get('datos')
+    datos_dic = json.loads(datos_str)
+    fecha_ingreso = datos_dic.get('fechaIngreso', '')
+    fecha_salida = datos_dic.get('fechaSalida', '')
+    totalPrecioInicial = datos_dic.get('totalPrecioInicial', '')
+    
+    return render_template('pago-reserva.html', fecha_ingreso=fecha_ingreso,fecha_salida=fecha_salida,totalPrecioInicial=totalPrecioInicial, usuario_test=usuario_test)
 
-@app.route('/pago-realizado')
-def pago_realizado():
+@app.route('/reserva-exitosa')
+def reserva_exitosa():
     # Datos del usuario logeado
     usuario_test = {
         'nombre': 'Juan',
@@ -174,16 +188,15 @@ def pago_realizado():
         'email': 'juanperez@gmail.com',
         'telefono': '123456789'
     }
-    # Datos del pago
-    datos_pago = {
 
-    }
+    return render_template('reserva-exitosa.html',usuario_test=usuario_test)
 
-    return render_template('pago-realizado',usuario_test=usuario_test, datos_pago=datos_pago)
+
 
 # Vista error 404
 def pagina_no_encontrada(error):
     return render_template('404.html'), 404
+
 
 if __name__=='__main__':
     app.add_url_rule('/query_string', view_func=query_string)

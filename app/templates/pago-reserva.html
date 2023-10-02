@@ -1,0 +1,95 @@
+{% extends './layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body%}
+<!-- Barra menu -->
+<div class="container-fluid">
+    <div class="barra-menu row">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4 text-center">
+                <img class="logo_home mx-auto" src="{{ url_for('static', filename='img/logo2_hotel.png') }}" alt="logo">
+            </div>
+            <div class="col-4"></div>
+            <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
+                <!-- Botones -->
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        <a href="{{ url_for('home') }}">
+                            <button class="boton">Inicio</button>
+                        </a>
+                        <a href="{{ url_for('habitaciones') }}">
+                            <button class="boton">Mis reservas</button>
+                        </a>
+                        <button class="boton">
+                            <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
+                            Bienvenido
+                        </button>
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        
+                    </div>
+                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                        
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Información de la reserva -->
+<div class="container-fluid pt-5">
+    <h1 class="titulo_pago_reserva">Pago Reserva</h1>
+    <div class="row">
+        <div class="col"></div>
+        <div class="contenedor-info1 col-6 pt-5">
+            
+        </div>
+        <!-- Formulario Pago -->
+        <div class="col"></div>
+        <div class="contenedor-info2 col-4 pt-5">
+            <form action="/pago-realizado" method="post">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Fecha llegada: {{ fecha_ingreso }} </li>
+                    <li class="list-group-item">Fecha Salida: {{ fecha_salida}}</li>
+                    <li id="precio-inicial" class="list-group-item"></li>
+                    <li class="list-group-item text-center">
+                        <button class="boton btn btn-success text-center">
+                            <img class="logo" src="{{ url_for('static', filename='img/tarjeta-de-credito.png') }}" alt="logo">
+                            Elige la forma de pago
+                        </button>
+                    </li>
+                    <li class="list-group-item"><div class="row">
+                        <div class="col"></div>
+                        <div class="col-12">
+                            <div class="d-grid gap-2 pt-3">
+                                <button class="btn btn-primary" type="submit">Pagar</button>
+                            </div>
+                        </div>
+                        <div class="col"></div>
+                    </div></li>
+                  </ul>
+            </form>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+<script>
+    var totalPrecioInicial = localStorage.getItem('totalPrecioInicial');
+    console.log(totalPrecioInicial)
+
+    // Verificar si totalPrecioInicial existe y no es nulo
+    if (totalPrecioInicial !== null) {
+        // Mostrar totalPrecioInicial en el elemento HTML
+        document.getElementById('precio-inicial').textContent = 'Total a pagar(30% de la reserva): ' + totalPrecioInicial;
+    } else {
+        // Manejar el caso en el que totalPrecioInicial no está definido
+        document.getElementById('precio-inicial').textContent = 'Total Precio Inicial no disponible';
+    }
+</script>
+
+
+
+
+{% endblock %}

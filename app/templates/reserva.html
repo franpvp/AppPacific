@@ -46,7 +46,7 @@
     </div>
     <!-- Formulario de reserva -->
     <div class="container">
-        <form id="reserva_form" action="/pago" method="post">
+        <form id="reserva_form" action="/pago-reserva" method="post">
             <div class="form-group pt-3">
                 <!-- Input Fecha Ingreso -->
                 <label for="fecha_ingreso">Seleccione fecha llegada:</label>
@@ -277,11 +277,11 @@
 
         // Validar si se han ingresado las fechas y la cantidad de huéspedes
         if (fechaIngreso && fechaSalida && cantidadHuespedes) {
-            if(btnSeleccionar){
-                // document.getElementById('detalle_reserva').style.display = 'block';
-            } if(btnSeleccionar2) {
-                // document.getElementById('detalle_reserva2').style.display = 'block';
-            }
+            var datos = {
+                fechaIngreso: fechaIngreso,
+                fechaSalida: fechaSalida
+            };
+            window.location.href = '/pago-reserva?datos='+JSON.stringify(datos);
             
         } else{
             alert('Ingrese todos los campos');
@@ -318,9 +318,16 @@
                 precioUnitario = precio_noche_matrimonial;
                 // Calcular 30% del total
                 precioInicial = precioUnitario * 0.3;
+                
                 // Calcular el total
                 totalPrecioMatrimonial.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
                 totalPrecioInicial.textContent = '$ ' + (noches * precioUnitario * 0.3).toFixed(0) + ' CLP';
+                var totalPrecioInicialTexto = totalPrecioInicial.textContent;
+                // Almacenar el contenido en localStorage
+                localStorage.setItem('totalPrecioInicial', totalPrecioInicialTexto);
+                console.log(totalPrecioInicial);
+
+                window.location.href = '/pago-reserva';
                 // Se habilita el div con display none
                 document.getElementById('detalle_reserva').style.display = 'block';
                 // Si hace click en el boton eliminar el div cambiar a display none
@@ -390,10 +397,8 @@
         document.getElementById('detalle_reserva').style.display = 'none';
         
     }
-
     function eliminarDetalle2(){
         document.getElementById('detalle_reserva2').style.display = 'none';
-
         }
 </script>
 

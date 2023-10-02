@@ -21,7 +21,7 @@
                         <a href="{{ url_for('habitaciones') }}">
                             <button class="boton">Mis reservas</button>
                         </a>
-                        <a href="{{ url_for('perfil') }}">
+                        <a>
                             <button class="boton">
                                 <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
                                 Bienvenido {{ usuario_test['nombre'] }}
@@ -56,19 +56,19 @@
 <!-- Botón para reservar -->
 <div class="container-fluid fondo">
     <div class="row justify-content-center"> <!-- Centra horizontalmente -->
-        <div class="col-12 col-md-5 col-sm-12 text-center mb-3 mx-auto">
+        <div class="col-12 col-md-4 col-sm-12 text-center mb-3 mx-auto">
             <a href="/reserva" class="btn_reserva">
                 <h1>Reservar</h1>
             </a>
         </div>
         <!-- Botón Mis Reservas -->
-        <div class="col-12 col-md-5 col-sm-12 text-center mb-3 mx-auto">
+        <div class="col-12 col-md-4 col-sm-12 text-center mb-3 mx-auto">
             <a href="/mis-reservas" class="btn_mis_reservas">
                 <h1>Mis Reservas</h1>
             </a>
         </div>
         <!-- Botón Modificar o Editar Reserva -->
-        <div class="col-12 col-md-5 col-sm-12 text-center mx-auto">
+        <div class="col-12 col-md-4 col-sm-12 text-center mx-auto">
             <div class="btn_mod_reserva">
                 <h1>Modificar o Eliminar Reserva</h1>
             </div>
