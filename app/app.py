@@ -80,34 +80,18 @@ class Usuario(db.Model):
         self.telefono_usuario = telefono_usuario
         self.tipo_usuario_id = tipo_usuario_id
 
-# Vista Perfil de usuario (Consultando a una base de datos)
-@app.route('/perfil')
-def perfil():
-    usuario_test = {
-        'nombre': 'Juan',
-        'apellido': 'Perez',
-        'email': 'juanperez@gmail.com',
-        'telefono': '123456789'
-    }
-    return render_template('perfil.html', usuario_test=usuario_test)
-
 # Vista Inicio Sesión
 @app.route('/inicio-sesion', methods=['GET', 'POST'])
 def login():
     error = None
-    # Diccionario con usuario
-    usuarios = {
-        'email':'juanperez@gmail.com',
-        'password':'juanperez123'
-    }
     if request.method == 'POST':
         email = request.form['email']
         contrasena = request.form['password']
 
         # Validación de credenciales
-        if email == usuarios['email'] and contrasena == usuarios['password']:
+        if email == 'usuario@gmail.com' and contrasena == 'prueba123':
             # Autenticación exitosa, redirige a la página de reserva
-            return redirect(url_for('reserva'))
+            return redirect(url_for('home'))
         else:
             # Credenciales incorrectas, muestra un mensaje de error
             error = "Credenciales incorrectas. Por favor, inténtalo nuevamente."
@@ -115,8 +99,11 @@ def login():
     return render_template('inicio-sesion.html', error=error)
 
 # Vista Registro
-@app.route('/registro')
+@app.route('/registro', methods=['GET','POST'])
 def registro():
+    if request.method == 'POST':
+        return redirect(url_for('home'))
+
     return render_template('/registro.html')
 
 #Vista Habitaciones
@@ -128,10 +115,11 @@ def habitaciones():
         'email': 'juanperez@gmail.com',
         'telefono': '123456789'
     }
+    
     return render_template('habitaciones.html', usuario_test=usuario_test)
 
 # Vista Reserva
-@app.route('/reserva')
+@app.route('/reserva', methods=['GET','POST'])
 def reserva():
     data = {
         'standard_matrimonial': {
@@ -150,6 +138,9 @@ def reserva():
         'email': 'juanperez@gmail.com',
         'telefono': '123456789'
     }
+    if request.method == 'POST':
+        return redirect(url_for('pago_reserva'))
+    
     return render_template('reserva.html', data=data, usuario_test=usuario_test)
 
 @app.route('/mis-reservas')
@@ -163,21 +154,13 @@ def mis_reservas():
 
     return render_template('mis-reservas.html', usuario_test=usuario_test)
 
-@app.route('/pago-reserva', methods=['GET'])
+@app.route('/pago-reserva', methods=['GET','POST'])
 def pago_reserva():
-    usuario_test = {
-        'nombre': 'Juan',
-        'apellido': 'Perez',
-        'email': 'juanperez@gmail.com',
-        'telefono': '123456789'
-    }
-    datos_str = request.args.get('datos')
-    datos_dic = json.loads(datos_str)
-    fecha_ingreso = datos_dic.get('fechaIngreso', '')
-    fecha_salida = datos_dic.get('fechaSalida', '')
-    totalPrecioInicial = datos_dic.get('totalPrecioInicial', '')
+    if request.method == 'POST':
+        return redirect(url_for('reserva_exitosa'))
+
     
-    return render_template('pago-reserva.html', fecha_ingreso=fecha_ingreso,fecha_salida=fecha_salida,totalPrecioInicial=totalPrecioInicial, usuario_test=usuario_test)
+    return render_template('pago-reserva.html')
 
 @app.route('/reserva-exitosa')
 def reserva_exitosa():
@@ -195,7 +178,13 @@ def reserva_exitosa():
 
 # Vista error 404
 def pagina_no_encontrada(error):
-    return render_template('404.html'), 404
+    usuario_test = {
+        'nombre': 'Juan',
+        'apellido': 'Perez',
+        'email': 'juanperez@gmail.com',
+        'telefono': '123456789'
+    }
+    return render_template('404.html',usuario_test=usuario_test), 404
 
 
 if __name__=='__main__':

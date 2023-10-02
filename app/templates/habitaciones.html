@@ -15,27 +15,120 @@
             <div class="col-4"></div>
             <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
                 <!-- Botones -->
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        <a href="{{ url_for('home') }}">
-                            <button class="boton">Inicio</button>
-                        </a>
-                        <a href="{{ url_for('habitaciones') }}">
-                            <button class="boton">Mis reservas</button>
-                        </a>
-                        <a>
-                            <button class="boton">
-                                <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
-                                Bienvenido {{ usuario_test['nombre'] }}
-                            </button>
-                        </a>
-                        
+                <div class="col-12 d-flex justify-content-center">
+                    <a href="{{ url_for('home') }}">
+                        <button class="boton">Inicio</button>
+                    </a>
+                    <a href="{{ url_for('mis_reservas') }}">
+                        <button class="boton">Mis reservas</button>
+                    </a>
+                    <div class="dropdown">
+                        <button class="boton dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
+                            <small id="nombre"></small>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="#">Configuración</a></li>
+                            <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+                        </ul>
                     </div>
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        
+                </div>
+                <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    
+                </div>
+                <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Catálogo de las habitaciones -->
+<!-- Habitación Standard Matrimonial -->
+<div class="card_container row">
+    <h1 class="text-center pb-3">Catálogo de Habitaciones</h1>
+    <div class="col-12">
+        <div class="card mb-3" style="width: 100%;">
+            <div class="row g-0">
+                <div class="img-card col-md-6">
+                    <img src="{{ url_for('static', filename='img/standard_matrimonial.jpg')}}" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="barra-titulo-card">
+                                    <h4 class="card-title text-center">Standard Matrimonial</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="card-title pt-3 text-center">1 Cama King Size - 1 Baño</h5>
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col-8">
+                                <h5 class="card-title pt-3">Contiene: </h5>
+                                <ol class="list-group text-center">
+                                    <li class="list-group-item">No fumadores</li>
+                                    <li class="list-group-item">Conexión inalámbrica a internet</li>
+                                    <li class="list-group-item">Ropa de cama y toallas</li>
+                                </ol>
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                        <div class="row text-center pt-3">
+                            <div class="col">
+                                <a class="card-text pt-3" href="{{ url_for('habitaciones')}}">
+                                    <small class="text-body-secondary">Más información</small>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Habitacion Standard Twin -->
+<div class="card_container row">
+    <div class="col-12">
+        <div class="card mb-3" style="width: 100%;">
+            <div class="row">
+                <div class="img-card col-md-6">
+                    <img src="{{ url_for('static', filename='img/camas-individuales.jpg')}}" class="img-card img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="barra-titulo-card">
+                                    <h4 class="card-title text-center">Standard Twin</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="card-title pt-3 text-center">2 Camas individuales - 1 Baño</h5>
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col-8">
+                                <h5 class="card-title pt-3">Contiene: </h5>
+                                <ol class="list-group text-center">
+                                    <li class="list-group-item">Vista al lago</li>
+                                    <li class="list-group-item">No fumadores</li>
+                                    <li class="list-group-item">Conexión inalámbrica a internet</li>
+                                    <li class="list-group-item">Baño</li>
+                                </ol>
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                        <div class="row text-center pt-3">
+                            <div class="col">
+                                <a class="card-text pt-3" href="{{ url_for('habitaciones') }}">
+                                    <small class="text-body-secondary">Más información</small>
+                                </a>
+                            </div>
+                        </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>

@@ -14,27 +14,141 @@
             <div class="col-4"></div>
             <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
                 <!-- Botones -->
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        <a href="{{ url_for('home') }}">
-                            <button class="boton">Inicio</button>
-                        </a>
-                        <a href="{{ url_for('habitaciones') }}">
-                            <button class="boton">Mis reservas</button>
-                        </a>
-                        <button class="boton">
+                <div class="col-12 d-flex justify-content-center">
+                    <a href="{{ url_for('home') }}">
+                        <button class="boton">Inicio</button>
+                    </a>
+                    <a href="{{ url_for('mis_reservas') }}">
+                        <button class="boton">Mis reservas</button>
+                    </a>
+                    <div class="dropdown">
+                        <button class="boton dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
-                            Bienvenido {{ usuario_test['nombre'] }}
+                            <small id="nombre"></small>
                         </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="#">Configuración</a></li>
+                            <li><a class="dropdown-item" href="/index">Cerrar Sesión</a></li>
+                        </ul>
                     </div>
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        
-                    </div>
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        
-                    </div>
+                </div>
+                <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    
+                </div>
+                <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    
+                </div>
             </div>
         </div>
     </div>
 </div>
+<!-- Contenido Lista de Reservas -->
+<div class="container-fluid pt-5">
+    <h1 class="titulo_pago_reserva">Mis reservas</h1>
+    <div class="row">
+        <div class="col"></div>
+        <div class="contenedor-info1 col-8 pt-5">
+            <div class="row">
+                <div class="col-12">
+                    <table id="tabla" class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Tipo_Habitación</th>
+                            <th scope="col">Fecha LLegada: </th>
+                            <th scope="col">Fecha Salida: </th>
+                            <th scope="col">Hora LLegada: </th>
+                            <th scope="col">Total Reserva: </th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="fila-1">
+                                <th scope="row">1</th>
+                                <td id="tipoHab"></td>
+                                <td id="fechaIngreso"></td>
+                                <td id="fechaSalida"></td>
+                                <td id="horaLLegada">15:00 P.M</td>
+                                <td id="total"></td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
+                                        <i class="fas fa-heart">Eliminar</i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+<script>
+    var nombre = localStorage.getItem('nombre');
+    var fechaIngreso = localStorage.getItem('fechaIngreso');
+    var fechaSalida = localStorage.getItem('fechaSalida');
+    var totalPrecioMatrimonial = localStorage.getItem('totalPrecioMatrimonial');
+    var totalPrecioIndividual = localStorage.getItem('totalPrecioIndividual');
+    
+    var tipoHabitacion1 = localStorage.getItem('tipoHabitacion1');
+    var tipoHabitacion2 = localStorage.getItem('tipoHabitacion2');
+    var descripcionHabitacion1 = localStorage.getItem('descripcionHabitacion1');
+    var descripcionHabitacion2 = localStorage.getItem('descripcionHabitacion2');
+    var tipoHab = '';
+    var pagoReserva = '';
+    var total = 0;
+
+    document.getElementById('nombre').textContent = 'Bienvenido ' + nombre;
+    document.getElementById('fechaIngreso').textContent = fechaIngreso;
+    document.getElementById('fechaSalida').textContent = fechaSalida;
+
+    if (tipoHabitacion1 === 'Standard Matrimonial') {
+        tipoHab = tipoHabitacion1;
+        total = parseFloat(totalPrecioMatrimonial);
+        pagoReserva = total * 0.3;
+        console.log('TIPO HABITACION: ' + tipoHab);
+        console.log('TOTAL: ' + total);
+        document.getElementById('tipoHab').textContent = tipoHabitacion1;
+        document.getElementById('total').textContent = totalPrecioMatrimonial;
+
+        console.log('TIPO HABITACION2: ' + tipoHab);
+        console.log('TOTAL2: ' + total);
+        console.log('PAGO RESERVA2: ' + pagoReserva);
+        
+    } else if (tipoHabitacion2 === 'Standard Twin') {
+        tipoHab = tipoHabitacion2;
+        total = parseFloat(totalPrecioIndividual);
+        document.getElementById('tipoHab').textContent = tipoHabitacion2;
+        document.getElementById('total').textContent = totalPrecioIndividual;
+    }
+
+
+    // Evento para eliminar reserva
+    document.getElementById('btn_eliminar1').addEventListener('click', eliminarReserva)
+
+    // Función para eliminar reserva
+    function eliminarFila(button) {
+        // Obtener el elemento padre (la fila) del botón
+        var fila = button.parentNode.parentNode;
+
+        // Obtener el ID de la fila
+        var idFila = fila.id;
+
+        // Eliminar la fila (por ejemplo, con jQuery)
+        fila.parentNode.removeChild(fila);
+
+        // Eliminar los datos del localStorage utilizando el ID de la fila
+        localStorage.removeItem(idFila);
+        localStorage.removeItem('fila-' + idFila);
+        localStorage.removeItem('tipoHab-' + idFila);
+        localStorage.removeItem('fechaIngreso-' + idFila);
+        localStorage.removeItem('fechaSalida-' + idFila);
+        localStorage.removeItem('horaLLegada-' + idFila);
+        localStorage.removeItem('total-' + idFila);
+    }  
+
+</script>
 
 {% endblock %}

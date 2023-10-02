@@ -18,12 +18,11 @@
                         <a href="{{ url_for('home') }}">
                             <button class="boton">Inicio</button>
                         </a>
-                        <a href="{{ url_for('habitaciones') }}">
+                        <a href="{{ url_for('mis_reservas') }}">
                             <button class="boton">Mis reservas</button>
                         </a>
-                        <button class="boton">
+                        <button id="nombre" class="boton">
                             <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
-                            Bienvenido {{ usuario_test['nombre'] }}
                         </button>
                     </div>
                     <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
@@ -48,8 +47,7 @@
         <div class="contenedor-info2 col-6 pt-5 text-center">
             <div class="row">
                 <div class="col"></div>
-                <div class="col-6">
-                    Hemos enviado un código QR a tu correo {{ usuario_test['email']}}, debes mostrarlo el dia del check-in.
+                <div id="email" class="col-6">
                 </div>
                 <div class="col"></div>
                 <div class="row pt-5">
@@ -58,7 +56,6 @@
                         <p>Descarga el código a continuación:</p>
                         <button class="btn btn-primary" type="submit">
                             <img class="logo_descarga" src="{{ url_for('static', filename='img/icono-descarga.png') }}" alt="logo">
-                            
                         </button>
                     </div>
                     <div class="col"></div>
@@ -71,7 +68,10 @@
         <div class="col"></div>
         <div class="col-4">
             <div class="d-grid gap-2 pt-3">
-                <button class="btn btn-primary" type="submit">Volver al inicio</button>
+                <a class="btn btn-primary" href="/home">
+                    Volver al inicio
+                </a>
+                
             </div>
         </div>
         <div class="col"></div>
@@ -79,6 +79,16 @@
 </div>
     
 </form>
+
+
+<script>
+    var nombre = localStorage.getItem('nombre');
+    var email = localStorage.getItem('email');
+    if(email != null){
+        document.getElementById('email').textContent = 'Hemos enviado un código QR a tu correo ' + email + ', debes mostrarlo el día del chek-in.';
+        document.getElementById('nombre').textContent = 'Bienvenido ' + nombre;
+    }
+</script>
 
 
 

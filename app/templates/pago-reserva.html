@@ -18,19 +18,18 @@
                         <a href="{{ url_for('home') }}">
                             <button class="boton">Inicio</button>
                         </a>
-                        <a href="{{ url_for('habitaciones') }}">
+                        <a href="{{ url_for('mis_reservas') }}">
                             <button class="boton">Mis reservas</button>
                         </a>
                         <button class="boton">
                             <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
-                            Bienvenido
+                            <small id="nombre-logo"></small>
                         </button>
                     </div>
                     <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
                         
                     </div>
                     <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        
                     </div>
             </div>
         </div>
@@ -43,15 +42,45 @@
     <div class="row">
         <div class="col"></div>
         <div class="contenedor-info1 col-6 pt-5">
-            
+            <div class="row">
+                <h1>Tus datos</h1>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="campo1">Nombre</label>
+                        <p type="text" id="nombre" class="form-control" disabled></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="campo3">E-mail</label>
+                        <p type="text" id="email" class="form-control" disabled></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="campo5">Hora de llegada</label>
+                        <p type="text" id="hora_llegada" class="form-control" disabled>15:00 P.M</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="campo2">Apellido</label>
+                        <p type="text" id="apellido" class="form-control" disabled></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="campo4">Rut</label>
+                        <p type="text" id="rut" class="form-control" disabled></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="campo6">Teléfono</label>
+                        <p type="text" id="telefono" class="form-control" disabled></p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- Formulario Pago -->
         <div class="col"></div>
+        <!-- Formulario Pago -->
         <div class="contenedor-info2 col-4 pt-5">
-            <form action="/pago-realizado" method="post">
+            <form action="/pago-reserva" method="post">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Fecha llegada: {{ fecha_ingreso }} </li>
-                    <li class="list-group-item">Fecha Salida: {{ fecha_salida}}</li>
+                    <li id="fechaIngreso" class="list-group-item"></li>
+                    <li id="fechaSalida" class="list-group-item"></li>
                     <li id="precio-inicial" class="list-group-item"></li>
                     <li class="list-group-item text-center">
                         <button class="boton btn btn-success text-center">
@@ -76,17 +105,42 @@
 </div>
 
 <script>
+    // Datos de la reserva
     var totalPrecioInicial = localStorage.getItem('totalPrecioInicial');
-    console.log(totalPrecioInicial)
+    var fechaIngreso = localStorage.getItem('fechaIngreso');
+    var fechaSalida = localStorage.getItem('fechaSalida');
 
     // Verificar si totalPrecioInicial existe y no es nulo
-    if (totalPrecioInicial !== null) {
+    if (totalPrecioInicial !== null && fechaIngreso !== null && fechaSalida !== null) {
         // Mostrar totalPrecioInicial en el elemento HTML
-        document.getElementById('precio-inicial').textContent = 'Total a pagar(30% de la reserva): ' + totalPrecioInicial;
+        document.getElementById('precio-inicial').textContent = 'Total a pagar (30% de la reserva): ' + totalPrecioInicial;
+        document.getElementById('fechaIngreso').textContent = 'Fecha de llegada: ' + fechaIngreso;
+        document.getElementById('fechaSalida').textContent = 'Fecha de salida: ' + fechaSalida;
     } else {
         // Manejar el caso en el que totalPrecioInicial no está definido
         document.getElementById('precio-inicial').textContent = 'Total Precio Inicial no disponible';
+        document.getElementById('fechaIngreso').textContent = 'Fecha ingreso no disponible';
+        document.getElementById('fechaSalida').textContent = 'Fecha salida no disponible';
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Obtener los valores del localStorage
+        var nombre = localStorage.getItem('nombre');
+        var email = localStorage.getItem('email');
+        var apellido = localStorage.getItem('apellido');
+        var rut = localStorage.getItem('rut');
+        var telefono = localStorage.getItem('telefono');
+
+        // Obtener las etiquetas <p> por su ID y establecer los valores
+        document.getElementById('nombre').textContent = nombre;
+        document.getElementById('email').textContent = email;
+        document.getElementById('apellido').textContent = apellido;
+        document.getElementById('rut').textContent = rut;
+        document.getElementById('telefono').textContent = telefono;
+        document.getElementById('nombre-logo').textContent = 'Bienvenido ' + nombre;
+    });
+
+    
 </script>
 
 

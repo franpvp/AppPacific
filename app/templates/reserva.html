@@ -14,24 +14,30 @@
             <div class="col-4"></div>
             <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
                 <!-- Botones -->
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        <a href="{{ url_for('home') }}">
-                            <button class="boton">Inicio</button>
-                        </a>
-                        <a href="{{ url_for('mis_reservas') }}">
-                            <button class="boton">Mis reservas</button>
-                        </a>
-                        <button class="boton">
+                <div class="col-12 d-flex justify-content-center">
+                    <a href="{{ url_for('home') }}">
+                        <button class="boton">Inicio</button>
+                    </a>
+                    <a href="{{ url_for('mis_reservas') }}">
+                        <button class="boton">Mis reservas</button>
+                    </a>
+                    <div class="dropdown">
+                        <button class="boton dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
-                            Bienvenido {{ usuario_test['nombre'] }}
+                            <small id="nombre"></small>
                         </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="#">Configuración</a></li>
+                            <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+                        </ul>
                     </div>
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        
-                    </div>
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                        
-                    </div>
+                </div>
+                <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    
+                </div>
+                <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -46,7 +52,7 @@
     </div>
     <!-- Formulario de reserva -->
     <div class="container">
-        <form id="reserva_form" action="/pago-reserva" method="post">
+        <form id="reserva_form" action="/reserva" method="post">
             <div class="form-group pt-3">
                 <!-- Input Fecha Ingreso -->
                 <label for="fecha_ingreso">Seleccione fecha llegada:</label>
@@ -121,7 +127,7 @@
                                         <div class="col"></div>
                                         <div class="col-8">
                                             <div class="d-grid gap-2 pt-3">
-                                                <button id="btn_seleccionar" class="btn btn-primary" type="submit">Seleccionar</button>
+                                                <button id="btn_seleccionar" class="btn btn-primary" type="button">Seleccionar</button>
                                             </div>
                                         </div>
                                         <div class="col"></div>
@@ -174,7 +180,7 @@
                                         <div class="col"></div>
                                         <div class="col-8">
                                             <div class="d-grid gap-2 pt-3">
-                                                <button id="btn_seleccionar2" class="btn btn-primary" type="submit">Seleccionar</button>
+                                                <button id="btn_seleccionar2" class="btn btn-primary" type="button">Seleccionar</button>
                                             </div>
                                         </div>
                                         <div class="col"></div>
@@ -195,7 +201,7 @@
                                 <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia">0</span> días</p></li>
                                 <li class="list-group-item"><p>Total: <span id="precio_matrimonial">0</span></p></p></li>
                                 <li class="list-group-item"><p>Pago Reserva(30% del total):$ <span id="precio_inicial">0</span></p></p></li>
-                                <button id="btn_eliminar1" class="btn btn-danger" type="submit">Eliminar Selección</button>
+                                <button id="btn_eliminar1" class="btn btn-danger" type="button">Eliminar Selección</button>
                             </ul>
                         </div>
                     </div>
@@ -219,7 +225,7 @@
                                     <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia2">0</span> días</p></li>
                                     <li class="list-group-item"><p>Total: $ <span id="precio_individual">0</span></p></p></li>
                                     <li class="list-group-item"><p>Pago Reserva(30% del total):$ <span id="precio_inicial2">0</span> CLP</p></p></li>
-                                    <button id="btn_eliminar2" class="btn btn-danger" type="submit">Eliminar Selección2</button>
+                                    <button id="btn_eliminar2" class="btn btn-danger" type="button">Eliminar Selección</button>
                                 </ul>
                             </div>
                         </div>
@@ -242,6 +248,8 @@
 
 
 <script>
+    var nombre = localStorage.getItem('nombre');
+    document.getElementById('nombre').textContent = 'Bienvenido ' + nombre;
     var fechaIngreso = document.getElementById('fecha_ingreso');
     var fechaSalida = document.getElementById('fecha_salida');
     
@@ -268,7 +276,6 @@
     });
 
     document.getElementById('reserva_form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Evitar el envío del formulario por defecto
         
         // Obtener los valores de las fechas y la cantidad de huéspedes
         var fechaIngreso = document.getElementById('fecha_ingreso').value;
@@ -281,7 +288,11 @@
                 fechaIngreso: fechaIngreso,
                 fechaSalida: fechaSalida
             };
-            window.location.href = '/pago-reserva?datos='+JSON.stringify(datos);
+            // Almacenar el contenido en localStorage
+            localStorage.setItem('fechaIngreso', fechaIngreso);
+            localStorage.setItem('fechaSalida', fechaSalida);
+
+            // window.location.href = '/pago-reserva?datos='+JSON.stringify(datos);
             
         } else{
             alert('Ingrese todos los campos');
@@ -289,7 +300,9 @@
     });
     // Función calcularNochesEstadiaMatrimonial
     function calcularNochesEstadiaMatrimonial() {
-        console.log('Llegue a método calcularNochesEstadiaMatrimonial')
+        console.log('Llegue a método calcularNochesEstadiaMatrimonial');
+        var tipoHabitacion1 = 'Standard Matrimonial';
+        var descripcionHabitacion1 = '1 Cama King Size - 1 Baño';
         var fechaIngresoValue = fechaIngreso.value;
         var fechaSalidaValue = fechaSalida.value;
         var precio_noche_matrimonial = 100000;
@@ -322,12 +335,14 @@
                 // Calcular el total
                 totalPrecioMatrimonial.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
                 totalPrecioInicial.textContent = '$ ' + (noches * precioUnitario * 0.3).toFixed(0) + ' CLP';
+                
                 var totalPrecioInicialTexto = totalPrecioInicial.textContent;
+                var totalPrecioMatrimonialTexto = totalPrecioMatrimonial.textContent;
                 // Almacenar el contenido en localStorage
                 localStorage.setItem('totalPrecioInicial', totalPrecioInicialTexto);
-                console.log(totalPrecioInicial);
-
-                window.location.href = '/pago-reserva';
+                localStorage.setItem('totalPrecioMatrimonial', totalPrecioMatrimonialTexto);
+                localStorage.setItem('tipoHabitacion1', tipoHabitacion1);
+                localStorage.setItem('descripcionHabitacion1', descripcionHabitacion1);
                 // Se habilita el div con display none
                 document.getElementById('detalle_reserva').style.display = 'block';
                 // Si hace click en el boton eliminar el div cambiar a display none
@@ -342,6 +357,8 @@
     // Función calcularNochesEstadiaIndividual
     function calcularNochesEstadiaIndividual() {
         console.log('Llegue a método calcularNochesEstadiaIndividual')
+        var tipoHabitacion2 = 'Standard Twin';
+        var descripcionHabitacion2 = '2 Camas individuales - 1 Baño';
         var fechaIngresoValue = fechaIngreso.value;
         var fechaSalidaValue = fechaSalida.value;
         var precio_noche_individual = 80000;
@@ -375,6 +392,14 @@
                 // Calcular el total
                 totalPrecioIndividual.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
                 totalPrecioInicial2.textContent = '$ ' + (noches * precioUnitario * 0.3).toFixed(0) + ' CLP';
+                
+                var totalPrecioInicial2Texto = totalPrecioInicial2.textContent;
+                var totalPrecioIndividualTexto = totalPrecioIndividual.textContent;
+                // Almacenar el contenido en localStorage
+                localStorage.setItem('totalPrecioInicial2', totalPrecioInicial2Texto);
+                localStorage.setItem('totalPrecioIndividual', totalPrecioIndividualTexto);
+                localStorage.setItem('tipoHabitacion2', tipoHabitacion2);
+                localStorage.setItem('descripcionHabitacion2', descripcionHabitacion2);
                 // Se habilita el div con display none
                 document.getElementById('detalle_reserva2').style.display = 'block';
                 // Si hace click en el boton eliminar el div cambiar a display none

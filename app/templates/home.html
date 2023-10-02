@@ -13,21 +13,24 @@
             </div>
             <div class="col-4"></div>
             <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
-                <!-- Botones -->
-                    <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+                    <!-- Botones -->
+                    <div class="col-12 d-flex justify-content-center">
                         <a href="{{ url_for('home') }}">
                             <button class="boton">Inicio</button>
                         </a>
-                        <a href="{{ url_for('habitaciones') }}">
+                        <a href="{{ url_for('mis_reservas') }}">
                             <button class="boton">Mis reservas</button>
                         </a>
-                        <a>
-                            <button class="boton">
+                        <div class="dropdown">
+                            <button class="boton dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
-                                Bienvenido {{ usuario_test['nombre'] }}
+                                <small id="nombre"></small>
                             </button>
-                        </a>
-                        
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="#">Configuración</a></li>
+                                <li><a class="dropdown-item" href="/" onclick="cerrarSesion()">Cerrar Sesión</a></li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
                         
@@ -69,12 +72,25 @@
         </div>
         <!-- Botón Modificar o Editar Reserva -->
         <div class="col-12 col-md-4 col-sm-12 text-center mx-auto">
-            <div class="btn_mod_reserva">
-                <h1>Modificar o Eliminar Reserva</h1>
-            </div>
+            <a href="/habitaciones">
+                <div class="btn_mod_reserva">
+                    <h1>Catálogo de Habitaciones</h1>
+                </div>
+            </a>
+            
         </div>
     </div>
 </div>
+
+<script>
+    var nombre = localStorage.getItem('nombre');
+    document.getElementById('nombre').textContent = 'Bienvenido '+ nombre;
+
+    function cerrarSesion(){
+        // Se borran todos los datos
+        localStorage.clear();
+    }
+</script>
 
 
 {% endblock %}
