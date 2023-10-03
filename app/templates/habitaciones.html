@@ -134,4 +134,9 @@
     </div>
 </div>
 
+<script>
+    var nombre = localStorage.getItem('nombre');
+    document.getElementById('nombre').textContent = 'Bienvenido ' + nombre;
+</script>
+
 {% endblock %}
