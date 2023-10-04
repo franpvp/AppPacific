@@ -2,6 +2,8 @@
 import json
 from flask import Flask, redirect, render_template, request, send_from_directory, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 
 
 # Se inicializa la aplicación
@@ -35,13 +37,7 @@ def index():
 
 @app.route('/home')
 def home():
-    usuario_test = {
-        'nombre': 'Juan',
-        'apellido': 'Perez',
-        'email': 'juanperez@gmail.com',
-        'telefono': '123456789'
-    }
-    return render_template('home.html', usuario_test=usuario_test)
+    return render_template('home.html')
 
 # Se pone la ruta a la vista mediante el decorador @app.route()
 @app.route('/contacto/<nombre>/<int:edad>')
@@ -61,24 +57,33 @@ def query_string():
     print(request.args.get('param2'))
     return "Ok"
 
+# Definición de la clase para el modelo Tipo_Usuario
+class TipoUsuario(db.Model):
+    __tablename__ = 'TIPO_USUARIO'
+    tipo_usuario_id = db.Column(db.Integer, primary_key=True)
+    nombre_tipo_usuario = db.Column(db.String(45),nullable=False)
+    usuarios = db.relationship('Usuario', backref='tipo_usuario', foreign_keys='Usuario.tipo_usuario_id')
+    
+# Definición de la clase para el modelo Usuario
 class Usuario(db.Model):
-    usuario_id = db.Column(db.Integer, primary_key=True)
-    rut_usuario = db.Column(db.String(12))
-    dv_usuario = db.Column(db.String(1))
-    nombre_usuario = db.Column(db.String(45))
-    apellido_usuario = db.Column(db.String(45))
-    correo_usuario = db.Column(db.String(45))
-    telefono_usuario = db.Column(db.String(10))
-    tipo_usuario_id = db.Column(db.Integer)
+    __tablename__ = 'USUARIO'
+    usuario_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    rut_usuario = db.Column(db.String(12), nullable=False)
+    nombre_usuario = db.Column(db.String(45), nullable=False)
+    apellido_usuario = db.Column(db.String(45), nullable=False)
+    correo_usuario = db.Column(db.String(45), nullable=False)
+    telefono_usuario = db.Column(db.String(10), nullable=False)
+    tipo_usuario_id = db.Column(db.Integer, db.ForeignKey('TIPO_USUARIO.tipo_usuario_id'), nullable=False)
+    
 
-    def __init__(self, rut_usuario, dv_usuario,nombre_usuario,apellido_usuario,correo_usuario,telefono_usuario,tipo_usuario_id):
+    def __init__(self, rut_usuario,nombre_usuario,apellido_usuario,correo_usuario,telefono_usuario,tipo_usuario_id=2):
         self.rut_usuario = rut_usuario
-        self.dv_usuario = dv_usuario
         self.nombre_usuario = nombre_usuario
         self.apellido_usuario = apellido_usuario
         self.correo_usuario = correo_usuario
         self.telefono_usuario = telefono_usuario
         self.tipo_usuario_id = tipo_usuario_id
+
 
 # Vista Inicio Sesión
 @app.route('/inicio-sesion', methods=['GET', 'POST'])
@@ -102,6 +107,27 @@ def login():
 @app.route('/registro', methods=['GET','POST'])
 def registro():
     if request.method == 'POST':
+        # Obtener datos del formulario de registro
+        rut = request.form['rut']
+        nombre = request.form['nombre']
+        apellido = request.form['apellido']
+        telefono = request.form['telefono']
+        email= request.form['email']
+        password = request.form['password']
+
+        # Creación de un nuevo usuario
+        nuevo_usuario = Usuario(
+            rut_usuario=rut, 
+            nombre_usuario=nombre, 
+            apellido_usuario=apellido, 
+            correo_usuario=email, 
+            telefono_usuario=telefono,
+            tipo_usuario_id=2
+        )
+        
+        # Agregar al usuario a la sesión y guardar en la base de datos
+        db.session.add(nuevo_usuario)
+        db.session.commit()
         return redirect(url_for('home'))
 
     return render_template('/registro.html')
