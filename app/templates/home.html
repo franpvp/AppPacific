@@ -12,7 +12,7 @@
                 <img class="logo_home mx-auto" src="{{ url_for('static', filename='img/logo2_hotel.png') }}" alt="logo">
             </div>
             <div class="col-4"></div>
-            <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
+                <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
                     <!-- Botones -->
                     <div class="col-12 d-flex justify-content-center">
                         <a href="{{ url_for('home') }}">
@@ -24,7 +24,7 @@
                         <div class="dropdown">
                             <button class="boton dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
-                                <small id="nombre"></small>
+                                <small>Bienvenido {{ usuario.nombre_usuario }}</small>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                 <li><a class="dropdown-item" href="#">Configuración</a></li>
@@ -38,7 +38,7 @@
                     <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
                         
                     </div>
-            </div>
+                </div>
         </div>
     </div>
 </div>
