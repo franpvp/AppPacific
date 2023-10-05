@@ -302,6 +302,20 @@ def pago_reserva(fecha_entrada,fecha_salida,cant_personas):
         
             return render_template('pago-reserva.html',usuario=usuario,fecha_entrada=fecha_entrada,fecha_salida=fecha_salida,cant_personas=cant_personas)
     return render_template('pago-reserva.html')
+
+@app.route('/metodo-pago', methods=['GET', 'POST'])
+def metodo_pago():
+    usuario_id = session.get('usuario_id')
+    if usuario_id:
+        # Recuperar el usuario de la base de datos utilizando el ID
+        usuario = Usuario.query.get(usuario_id)
+        if usuario:
+            if request.method == 'POST':
+                return redirect(url_for('reserva_exitosa'))
+        
+    return render_template('metodo-pago.html',usuario =usuario)
+
+
 @app.route('/reserva-exitosa')
 def reserva_exitosa():
     usuario_id = session.get('usuario_id')
@@ -314,7 +328,6 @@ def reserva_exitosa():
             return render_template('reserva-exitosa.html', usuario=usuario)
         
     return render_template('reserva-exitosa.html')
-
 
 
 # Vista error 404

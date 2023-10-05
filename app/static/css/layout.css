@@ -313,3 +313,13 @@ a{
     border-radius: 30px;
 }
 
+.contenedor-credito-debito{
+    width: 200px;
+    height: 200px;
+}
+
+.contenedor-transferencia{
+    width: 200px;
+    height: 200px;
+}
+

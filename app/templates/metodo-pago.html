@@ -1,46 +1,171 @@
-{% extends './layout.html' %}
-
-{% block title %}Reserva{% endblock %}
-
-{% block body%}
+{% extends './layout.html' %} {% block title %}Reserva{% endblock %} {% block
+body%}
 <!-- Barra menu -->
 <div class="container-fluid">
-    <div class="barra-menu row">
+  <div class="barra-menu row">
+    <div class="row">
+      <div class="col-4"></div>
+      <div class="col-4 text-center">
+        <img
+          class="logo_home mx-auto"
+          src="{{ url_for('static', filename='img/logo2_hotel.png') }}"
+          alt="logo"
+        />
+      </div>
+      <div class="col-4"></div>
+      <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
+        <!-- Botones -->
+        <div class="col-12 d-flex justify-content-center">
+          <a href="{{ url_for('home') }}">
+            <button class="boton">Inicio</button>
+          </a>
+          <a href="{{ url_for('mis_reservas') }}">
+            <button class="boton">Mis reservas</button>
+          </a>
+          <div class="dropdown">
+            <button
+              class="boton dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                class="logo"
+                src="{{ url_for('static', filename='img/logo_usuario.png') }}"
+                alt="logo"
+              />
+              <small>Bienvenido {{ usuario.nombre_usuario }}</small>
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="dropdownMenuButton"
+            >
+              <li><a class="dropdown-item" href="#">Configuración</a></li>
+              <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-12">
+          <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+        </div>
+        <div class="col-12">
+          <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Formulario método de pago -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <h1 class="titulo-reserva text-center">Forma de Pago</h1>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row pt-4 pb-5">
+        <div class="col"></div>
+        <div class="col">
+            <button name="credito-debito" class="contenedor-credito-debito btn btn-light">
+                <img
+                  src="{{ url_for('static', filename='img/banco.png') }}"
+                  alt="credito"
+                />
+            </button>
+        </div>
+        <div class="col">
+            <button name="transferencia" class="contenedor-transferencia btn btn-light">
+                <img
+                  src="{{ url_for('static', filename='img/tarjeta-de-credito.png') }}"
+                  alt="transferencia"
+                />
+            </button>
+        </div>
+        <div class="col"></div>
+    </div>
+    
+    <form action="/metodo-pago" method="post">
         <div class="row">
-            <div class="col-4"></div>
-            <div class="col-4 text-center">
-                <img class="logo_home mx-auto" src="{{ url_for('static', filename='img/logo2_hotel.png') }}" alt="logo">
+            <div class="col"></div>
+            <div class="col-9">
+                <div class="form-floating mb-3 pb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="input-titular"
+                      pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+ [A-Za-záéíóúÁÉÍÓÚñÑ\s]+$"
+                      placeholder="name@example.com"
+                      required
+                    />
+                    <label for="floatingInput">Titular de tarjeta</label>
+                </div>
             </div>
-            <div class="col-4"></div>
-            <div class="btn-grupo col-xs-12 col-sm-12 col-md-12 col-6 text-center">
-                <!-- Botones -->
-                <div class="col-12 d-flex justify-content-center">
-                    <a href="{{ url_for('home') }}">
-                        <button class="boton">Inicio</button>
-                    </a>
-                    <a href="{{ url_for('mis_reservas') }}">
-                        <button class="boton">Mis reservas</button>
-                    </a>
-                    <div class="dropdown">
-                        <button class="boton dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img class="logo" src="{{ url_for('static', filename='img/logo_usuario.png') }}" alt="logo">
-                            <small>Bienvenido {{ usuario.nombre_usuario }}</small>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" href="#">Configuración</a></li>
-                            <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                    
-                </div>
-                <div class="col-12"> <!-- Empuja los botones hacia la derecha en dispositivos móviles -->
-                    
-                </div>
+            <div class="col"></div>
+        </div>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-9   ">
+                <div class="form-floating pb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="input-numero"
+                      maxlength="19"
+                      pattern="^\d{4} \d{4} \d{4} \d{4}$"
+                      title="Ingresa solo números"
+                      placeholder="numeroTarjeta"
+                      required
+                    />
+                    <label for="floatingPassword">Número de tarjeta</label>
+                  </div>
+            </div>
+            <div class="col"></div>
+        </div>
+      
+      
+      <!-- Fecha de vencimiento -->
+      <div class="row pb-4">
+        <div class="col"></div>
+        <div class="col-3">
+          <label for="dia">Día de vencimiento</label>
+          <input type="text" class="form-control" id="dia" maxlength="2" pattern="[0-9]+" placeholder="DD" required/>
+        </div>
+        <div class="col-3">
+          <label for="mes">Mes</label>
+          <input type="text" class="form-control" id="mes" maxlength="2" pattern="[0-9]+" placeholder="MM" required/>
+        </div>
+        <div class="col-3">
+          <label for="codigo">Código de seguridad</label>
+          <input type="text" class="form-control" id="codigo" maxlength="3" pattern="[0-9]+" placeholder="CVV" required/>
+        </div>
+        <div class="col"></div>
+      </div>
+      <div class="row pt-3 pb-5">
+        <div class="col"></div>
+        <div class="col-8">
+            <div class="d-grid gap-2 pt-4 pb-4">
+                <button class="btn btn-primary" type="submit">Pagar</button>
             </div>
         </div>
+        <div class="col"></div>
     </div>
+    </form>
+  </div>
 </div>
+
+<script>
+    document.getElementById('input-numero').addEventListener('input', function (e) {
+    const input = e.target;
+    const value = input.value.replace(/\s/g, '');
+
+    if (value.length > 0) {
+        input.value = value.match(/\d{1,4}/g).join(' ');
+    } else {
+        input.value = '';
+    }
+});
+</script>
 
 {% endblock %}
