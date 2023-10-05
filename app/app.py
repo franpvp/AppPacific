@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy import Date 
 
 
 # Se inicializa la aplicación
@@ -69,7 +70,7 @@ def query_string():
     print(request.args.get('param2'))
     return "Ok"
 
-# Definición de la clase para el modelo Tipo_Usuario
+# Definición de la clase para el modelo TipoUsuario
 # IMPORTANTE: EN LA BASE DE DATOS DEBEN HABER DATOS EN TIPO_USUARIO
 class TipoUsuario(db.Model):
     __tablename__ = 'TIPO_USUARIO'
@@ -99,6 +100,75 @@ class Usuario(db.Model):
         self.telefono_usuario = telefono_usuario
         self.tipo_usuario_id = tipo_usuario_id
 
+# Definición de la clase para el modelo Hotel
+class Hotel(db.Model):
+    __tablename__ = 'HOTEL'
+    hotel_id = db.Column(db.Integer, primary_key=True)
+    nombre_hotel = db.Column(db.String(45), nullable=False)
+    direccion = db.Column(db.String(45), nullable=False)
+    categoria = db.Column(db.String(45), nullable=True)
+
+
+# Definición de la clase para el modelo Habitacion
+class Habitacion(db.Model):
+    __tablename__ = 'HABITACION'
+    habitacion_id = db.Column(db.Integer, primary_key=True)
+    hotel_id = db.Column(db.Integer, db.ForeignKey('HOTEL.hotel_id'), nullable=False)
+    tipo = db.Column(db.String(45), nullable=False)
+    capacidad = db.Column(db.Integer, nullable=False)
+    precio_noche = db.Column(db.Integer, nullable=False)
+    cant_disponibles = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, habitacion_id,hotel_id,tipo,capacidad,precio_noche,cant_disponibles):
+        self.habitacion_id = habitacion_id
+        self.hotel_id = hotel_id
+        self.tipo = tipo
+        self.capacidad = capacidad
+        self.precio_noche = precio_noche
+        self.cant_disponibles = cant_disponibles
+
+
+# Definición de la clase para el modelo MetodoPago
+class MetodoPago(db.Model):
+    __tablename__ = 'METODO_PAGO'
+    metodo_pago_id = db.Column(db.Integer, primary_key=True)
+    tipo_metodo = db.Column(db.String(45), nullable=False)
+
+# Definición de la clase para el modelo DetallePago
+class DetallePago(db.Model):
+    __tablename__ = 'DETALLE_PAGO'
+    detalle_pago_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    metodo_pago_id = db.Column(db.Integer, db.ForeignKey('METODO_PAGO.metodo_pago_id'), nullable=False)
+    pago_inicial = db.Column(db.Integer, nullable=False)
+    pago_pendiente = db.Column(db.Integer, nullable=False)
+    fecha_pago = db.Column(Date, nullable=False)
+
+    def __init__(self, detalle_pago_id,metodo_pago_id,pago_inicial,pago_pendiente,fecha_pago):
+        self.detalle_pago_id = detalle_pago_id
+        self.metodo_pago_id = metodo_pago_id
+        self.pago_inicial = pago_inicial
+        self.pago_pendiente = pago_pendiente
+        self.fecha_pago = fecha_pago
+
+# Definición de la clase para el modelo Reserva
+class Reserva(db.Model):
+    __tablename__ = 'RESERVA'
+    reserva_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    habitacion_id = db.Column(db.Integer, db.ForeignKey('HABITACION.habitacion_id'), nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('USUARIO.usuario_id'), nullable=False)
+    detalle_pago_id = db.Column(db.Integer, db.ForeignKey('DETALLE_PAGO.detalle_pago_id'), nullable=False)
+    fecha_entrada = db.Column(Date, nullable=False)
+    fecha_salida = db.Column(Date, nullable=False)
+    cant_personas = db.Column(db.Integer, nullable=False)
+
+    def __init__(self,habitacion_id,usuario_id,detalle_pago_id,fecha_entrada,fecha_salida,cant_personas):
+        self.habitacion_id = habitacion_id
+        self.usuario_id = usuario_id
+        self.detalle_pago_id = detalle_pago_id
+        self.fecha_entrada = fecha_entrada
+        self.fecha_salida = fecha_salida
+        self.cant_personas = cant_personas
+
 
 # Vista Inicio Sesión
 @app.route('/inicio-sesion', methods=['GET', 'POST'])
@@ -118,7 +188,6 @@ def login():
             return redirect(url_for('home'))
             
         print('Email o contraseña incorrectos')
-        
 
     return render_template('inicio-sesion.html')
 
@@ -158,43 +227,38 @@ def registro():
 @app.route('/habitaciones')
 def habitaciones():
     usuario_id = session.get('usuario_id')
-    if usuario_id:
+    habitacion_twin = Habitacion.query.filter_by(habitacion_id=1).first()
+    habitacion_mat = Habitacion.query.filter_by(habitacion_id=2).first()
+    if usuario_id and habitacion_twin and habitacion_mat:
         # Recuperar el usuario de la base de datos utilizando el ID
         usuario = Usuario.query.get(usuario_id)
-
         if usuario:
             # Renderizar la plantilla HTML y pasar el objeto 'usuario' a la plantilla
-            return render_template('habitaciones.html', usuario=usuario)
-    
+            print('Llegué hasta acá')
+            return render_template('habitaciones.html', usuario=usuario,habitacion_twin=habitacion_twin, habitacion_mat=habitacion_mat)
+
     return render_template('habitaciones.html')
 
 # Vista Reserva
 @app.route('/reserva', methods=['GET','POST'])
 def reserva():
+    habitacion_twin = Habitacion.query.filter_by(habitacion_id=1).first()
+    habitacion_mat = Habitacion.query.filter_by(habitacion_id=2).first()
     usuario_id = session.get('usuario_id')
+    standard_twin = habitacion_twin.tipo
+    standard_mat = habitacion_mat.tipo
     if usuario_id:
         # Recuperar el usuario de la base de datos utilizando el ID
         usuario = Usuario.query.get(usuario_id)
-
         if usuario:
-            # Renderizar la plantilla HTML y pasar el objeto 'usuario' a la plantilla
-            return render_template('reserva.html', usuario=usuario)
-        
-    data = {
-        'standard_matrimonial': {
-            'precio_noche': 100000,
-            'max_huespedes': 2
-            
-        },
-        'standard_twin': {
-            'precio_noche': 80000,
-            'max_huespedes': 2
-        }
-    }
-    if request.method == 'POST':
-        return redirect(url_for('pago_reserva'))
+            if request.method == 'POST':
+                fecha_entrada = request.form['fecha_entrada']
+                print('LA FECHA DE INGRESO ES: ', fecha_entrada)
+                fecha_salida = request.form['fecha_salida']
+                cant_personas = request.form['cantidad_huespedes']
+                return redirect(url_for('pago_reserva',fecha_entrada=fecha_entrada, fecha_salida=fecha_salida,cant_personas=cant_personas))
     
-    return render_template('reserva.html', data=data)
+    return render_template('reserva.html',usuario=usuario)
 
 @app.route('/mis-reservas')
 def mis_reservas():
@@ -209,23 +273,35 @@ def mis_reservas():
 
     return render_template('mis-reservas.html', usuario=usuario)
 
-@app.route('/pago-reserva', methods=['GET','POST'])
-def pago_reserva():
+@app.route('/pago-reserva/<fecha_entrada>/<fecha_salida>/<int:cant_personas>', methods=['GET','POST'])
+def pago_reserva(fecha_entrada,fecha_salida,cant_personas):
     usuario_id = session.get('usuario_id')
+    # Crear reserva tipo twin
+    # reserva_twin = Reserva(
+    #     habitacion_id = 1,
+    #     usuario_id = usuario_id,
+    #     detalle_pago_id = 1,
+    # )
+    # Crear reserva tipo matrimonial
+    # reserva_mat = Reserva(
+    #     habitacion_id = 2,
+    #     usuario_id = usuario_id,
+    #     detalle_pago_id = 1,
+    #     fecha_entrada = fecha_entrada,
+    #     fecha_salida = fecha_salida,
+    #     cant_personas = cant_personas
+    # )
     if usuario_id:
         # Recuperar el usuario de la base de datos utilizando el ID
         usuario = Usuario.query.get(usuario_id)
-
         if usuario:
-            # Renderizar la plantilla HTML y pasar el objeto 'usuario' a la plantilla
-            return render_template('pago-reserva.html', usuario=usuario)
+            # fecha_entrada = request.args.get('fecha_entrada')
+            # print('FECHA DE ENTRADA EN PAGO-RESERVA: ', fecha_entrada)
+            # fecha_salida = request.args.get('fecha_salida')
+            # cant_personas = request.args.get('cant_personas')
         
-    if request.method == 'POST':
-        return redirect(url_for('reserva_exitosa'))
-
-    
+            return render_template('pago-reserva.html',usuario=usuario,fecha_entrada=fecha_entrada,fecha_salida=fecha_salida,cant_personas=cant_personas)
     return render_template('pago-reserva.html')
-
 @app.route('/reserva-exitosa')
 def reserva_exitosa():
     usuario_id = session.get('usuario_id')

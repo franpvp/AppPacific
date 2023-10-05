@@ -120,6 +120,16 @@
                             </div>
                             <div class="col"></div>
                         </div>
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col-8">
+                                <h5 class="card-title pt-3">Disponibilidad</h5>
+                                <ol class="list-group text-center">
+                                    <li class="list-group-item">{{ habitacion_twin.cant_disponibles }}</li>
+                                </ol>
+                            </div>
+                            <div class="col"></div>
+                        </div>
                         <div class="row text-center pt-3">
                             <div class="col">
                                 <a class="card-text pt-3" href="{{ url_for('habitaciones') }}">
@@ -134,9 +144,5 @@
     </div>
 </div>
 
-<script>
-    var nombre = localStorage.getItem('nombre');
-    document.getElementById('nombre').textContent = 'Bienvenido ' + nombre;
-</script>
 
 {% endblock %}

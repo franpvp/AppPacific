@@ -57,7 +57,7 @@
                 <!-- Input Fecha Ingreso -->
                 <label for="fecha_ingreso">Seleccione fecha llegada:</label>
                 <div class="input-group date" id="datetimepicker_ingreso" data-target-input="nearest">
-                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker_ingreso" id="fecha_ingreso" required/>
+                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker_ingreso" id="fecha_ingreso" name="fecha_entrada" required/>
                     <div class="input-group-append" data-target="#datetimepicker_ingreso" data-toggle="datetimepicker">
                         <div class="input-group-text">
                             <img class="calendar" src="{{ url_for('static', filename='img/calendar.png') }}">
@@ -67,7 +67,7 @@
                 <!-- Input Fecha Salida -->
                 <label class="pt-3" for="fecha_salida">Seleccione fecha salida:</label>
                 <div class="input-group date" id="datetimepicker_salida" data-target-input="nearest">
-                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker_salida" id="fecha_salida" required/>
+                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker_salida" id="fecha_salida" name="fecha_salida" required/>
                     <div class="input-group-append" data-target="#datetimepicker_salida" data-toggle="datetimepicker">
                         <div class="input-group-text">
                             <img class="calendar" src="{{ url_for('static', filename='img/calendar.png') }}">
@@ -248,8 +248,6 @@
 
 
 <script>
-    var nombre = localStorage.getItem('nombre');
-    document.getElementById('nombre').textContent = 'Bienvenido ' + nombre;
     var fechaIngreso = document.getElementById('fecha_ingreso');
     var fechaSalida = document.getElementById('fecha_salida');
     
