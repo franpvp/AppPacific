@@ -78,7 +78,7 @@
                 <!-- Input cantidad de huéspedes -->
                 <div class="input-huespedes">
                     <label for="fecha">Ingrese cantidad de huéspedes:</label>
-                    <select class="form-select" id="cantidad_huespedes" name="cantidad_huespedes" aria-label="Default select example" required>
+                    <select class="form-select" id="cantidad_huespedes" name="cant_personas" aria-label="Default select example" required>
                         <option value="" selected disabled>Seleccione</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -127,7 +127,7 @@
                                         <div class="col"></div>
                                         <div class="col-8">
                                             <div class="d-grid gap-2 pt-3">
-                                                <button id="btn_seleccionar" class="btn btn-primary" type="button">Seleccionar</button>
+                                                <button id="btn_seleccionar" name="btn_seleccionar" class="btn btn-primary" type="button">Seleccionar</button>
                                             </div>
                                         </div>
                                         <div class="col"></div>
@@ -200,7 +200,9 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia">0</span> días</p></li>
                                 <li class="list-group-item"><p>Total: <span id="precio_matrimonial">0</span></p></p></li>
-                                <li class="list-group-item"><p>Pago Reserva(30% del total):$ <span id="precio_inicial">0</span></p></p></li>
+                                <li class="list-group-item"><p>Pago Reserva(30% del total):$ 
+                                    <span id="precio_inicial" name="precio_inicial">{{ session['precio_inicial']}} </span>
+                                </li>
                                 <button id="btn_eliminar1" class="btn btn-danger" type="button">Eliminar Selección</button>
                             </ul>
                         </div>
@@ -224,7 +226,9 @@
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia2">0</span> días</p></li>
                                     <li class="list-group-item"><p>Total: $ <span id="precio_individual">0</span></p></p></li>
-                                    <li class="list-group-item"><p>Pago Reserva(30% del total):$ <span id="precio_inicial2">0</span> CLP</p></p></li>
+                                    <li class="list-group-item"><p>Pago Reserva(30% del total):$ 
+                                        <span id="precio_inicial2" name="precio_inicial2">{{ session['precio_inicial2']}}</span> CLP
+                                    </li>
                                     <button id="btn_eliminar2" class="btn btn-danger" type="button">Eliminar Selección</button>
                                 </ul>
                             </div>
@@ -328,7 +332,26 @@
                 console.log('Entre el detalle del primer boton')
                 precioUnitario = precio_noche_matrimonial;
                 // Calcular 30% del total
-                precioInicial = precioUnitario * 0.3;
+                var precioInicial = (noches * precioUnitario * 0.3).toFixed(0);
+                
+                var datos = {
+                    precio_inicial: precioInicial
+                };
+                // Realizar la solicitud AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "/guardar_datos", // Ruta en Flask para guardar los datos en la sesión
+                    data: JSON.stringify(datos), // Enviar los datos como JSON
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        
+                    },
+                    error: function (error) {
+                        console.error("Error en la solicitud AJAX: " + error.responseText);
+                    }
+                });
+
                 
                 // Calcular el total
                 totalPrecioMatrimonial.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
@@ -386,7 +409,7 @@
                 console.log('Entre el detalle del segundo boton')
                 precioUnitario = precio_noche_individual;
                 // Calcular 30% del total
-                precioInicial = precioUnitario * 0.3;
+                precioInicial = (noches * precioUnitario * 0.3).toFixed(0);
                 // Calcular el total
                 totalPrecioIndividual.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
                 totalPrecioInicial2.textContent = '$ ' + (noches * precioUnitario * 0.3).toFixed(0) + ' CLP';

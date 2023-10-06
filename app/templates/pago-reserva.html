@@ -85,25 +85,21 @@
         <div class="contenedor-info2 col-4 pt-5">
             <form action="/pago-reserva" method="post">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">{{ fecha_entrada }}</li>
-                    <li class="list-group-item">{{ fecha_salida }}</li>
-                    <li id="precio-inicial" class="list-group-item"></li>
+                    <li class="list-group-item">Fecha Ingreso: {{ session['fecha_entrada'] }}</li>
+                    <li class="list-group-item">Fecha Salida: {{ session['fecha_salida'] }}</li>
+                    {% if session['precio_inicial'] %}
+                    <li name="precio-inicial" class="list-group-item">Total a pagar (30% de la reserva): $ {{ session['precio_inicial']}} CLP</li>
+                    {% elif session['precio_inicial2'] %}
+                    <li name="precio-inicial2" class="list-group-item">{{ session['precio_inicial2']}}</li>
+                    {% else %}
+                    <p>No hay resultados</p>
+                    {% endif %}
                     <li class="list-group-item text-center">
                         <a href="/metodo-pago" class="boton btn btn-success text-center">
                             <img class="logo" src="{{ url_for('static', filename='img/tarjeta-de-credito.png') }}" alt="logo">
                             Elige la forma de pago
                         </a>
-                        
                     </li>
-                    <li class="list-group-item"><div class="row">
-                        <div class="col"></div>
-                        <div class="col-12">
-                            <div class="d-grid gap-2 pt-3">
-                                <button class="btn btn-primary" type="submit">Pagar</button>
-                            </div>
-                        </div>
-                        <div class="col"></div>
-                    </div></li>
                   </ul>
             </form>
         </div>
@@ -130,25 +126,6 @@
         document.getElementById('fechaSalida').textContent = 'Fecha salida no disponible';
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Obtener los valores del localStorage
-        var nombre = localStorage.getItem('nombre');
-        var email = localStorage.getItem('email');
-        var apellido = localStorage.getItem('apellido');
-        var rut = localStorage.getItem('rut');
-        var telefono = localStorage.getItem('telefono');
-
-        // Obtener las etiquetas <p> por su ID y establecer los valores
-        document.getElementById('nombre').textContent = nombre;
-        document.getElementById('email').textContent = email;
-        document.getElementById('apellido').textContent = apellido;
-        document.getElementById('rut').textContent = rut;
-        document.getElementById('telefono').textContent = telefono;
-        document.getElementById('nombre').textContent = nombre;
-        document.getElementById('nombre-logo').textContent = 'Bienvenido ' + nombre;
-    });
-
-    
 </script>
 
 

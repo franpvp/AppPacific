@@ -1,6 +1,6 @@
 # Se importa la clase Flask
 import json
-from flask import Flask, redirect, render_template, request, send_from_directory, url_for, session, flash
+from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
@@ -169,7 +169,6 @@ class Reserva(db.Model):
         self.fecha_salida = fecha_salida
         self.cant_personas = cant_personas
 
-
 # Vista Inicio Sesión
 @app.route('/inicio-sesion', methods=['GET', 'POST'])
 def login():
@@ -186,7 +185,6 @@ def login():
             session['usuario_id'] = usuario.usuario_id
             flash('Inicio de sesión exitoso.', 'success')
             return redirect(url_for('home'))
-            
         print('Email o contraseña incorrectos')
 
     return render_template('inicio-sesion.html')
@@ -220,7 +218,6 @@ def registro():
         db.session.add(nuevo_usuario)
         db.session.commit()
         return redirect(url_for('home'))
-
     return render_template('/registro.html')
 
 #Vista Habitaciones
@@ -242,24 +239,97 @@ def habitaciones():
 # Vista Reserva
 @app.route('/reserva', methods=['GET','POST'])
 def reserva():
-    habitacion_twin = Habitacion.query.filter_by(habitacion_id=1).first()
-    habitacion_mat = Habitacion.query.filter_by(habitacion_id=2).first()
     usuario_id = session.get('usuario_id')
-    standard_twin = habitacion_twin.tipo
-    standard_mat = habitacion_mat.tipo
     if usuario_id:
         # Recuperar el usuario de la base de datos utilizando el ID
         usuario = Usuario.query.get(usuario_id)
         if usuario:
             if request.method == 'POST':
                 fecha_entrada = request.form['fecha_entrada']
-                print('LA FECHA DE INGRESO ES: ', fecha_entrada)
                 fecha_salida = request.form['fecha_salida']
-                cant_personas = request.form['cantidad_huespedes']
-                return redirect(url_for('pago_reserva',fecha_entrada=fecha_entrada, fecha_salida=fecha_salida,cant_personas=cant_personas))
-    
+                cant_personas = request.form['cant_personas']
+
+                # Se guardan en sesiones
+                session['fecha_entrada'] = fecha_entrada
+                session['fecha_salida'] = fecha_salida
+                session['cant_personas'] = cant_personas
+                print('GUARDÉ LAS SESIONEEEES')
+                return redirect(url_for('pago_reserva'))
+
     return render_template('reserva.html',usuario=usuario)
 
+# Vista Pago de Reserva
+@app.route('/pago-reserva', methods=['GET','POST'])
+def pago_reserva():
+    usuario_id = session.get('usuario_id')
+    if usuario_id:
+        # Recuperar el usuario de la base de datos utilizando el ID
+        usuario = Usuario.query.get(usuario_id)
+        if usuario:
+            fecha_entrada = session.get('fecha_entrada')
+            fecha_salida = session.get('fecha_salida')
+            cant_personas = session.get('cant_personas')
+            return render_template('pago-reserva.html',usuario=usuario)
+    return render_template('pago-reserva.html')
+
+# Vista método de pago
+@app.route('/metodo-pago', methods=['GET', 'POST'])
+def metodo_pago():
+    usuario_id = session.get('usuario_id')
+    pago_inicial = request.form.get('pago-inicial')
+    habitacion_twin = Habitacion.query.filter_by(habitacion_id=1).first()
+    habitacion_mat = Habitacion.query.filter_by(habitacion_id=2).first()
+    id_twin = habitacion_twin.habitacion_id
+    id_mat = habitacion_mat.habitacion_id
+    if usuario_id:
+        # Recuperar el usuario de la base de datos utilizando el ID
+        usuario = Usuario.query.get(usuario_id)
+        if usuario:
+            if request.method == 'POST':
+                if id_twin:
+                    # Crear reserva tipo twin
+                    reserva_twin = Reserva(
+                        habitacion_id = 1,
+                        usuario_id = usuario_id,
+                        detalle_pago_id = 1,
+                        fecha_entrada = session['fecha_entrada'],
+                        fecha_salida = session['fecha_salida'],
+                        cant_personas = session['cant_personas']
+                    )
+                    db.session.add(reserva_twin)
+                    db.session.commit()
+                elif id_mat:
+                    # Crear reserva tipo matrimonial
+                    reserva_mat = Reserva(
+                        habitacion_id = 2,
+                        usuario_id = usuario_id,
+                        detalle_pago_id = 1,
+                        fecha_entrada = fecha_entrada,
+                        fecha_salida = fecha_salida,
+                        cant_personas = cant_personas
+                    )
+                    db.session.add(reserva_mat)
+                    db.session.commit()
+                return redirect(url_for('reserva_exitosa'))
+    return render_template('metodo-pago.html',usuario=usuario)
+
+# Vista reserva exitosa
+@app.route('/reserva-exitosa')
+def reserva_exitosa():
+    usuario_id = session.get('usuario_id')
+    
+    if usuario_id:
+        # Recuperar el usuario de la base de datos utilizando el ID
+        usuario = Usuario.query.get(usuario_id)
+
+        if usuario:
+            # Renderizar la plantilla HTML y pasar el objeto 'usuario' a la plantilla
+            return render_template('reserva-exitosa.html',usuario=usuario)
+        
+    return render_template('reserva-exitosa.html')
+
+
+# Vista Mis Reservas
 @app.route('/mis-reservas')
 def mis_reservas():
     usuario_id = session.get('usuario_id')
@@ -273,63 +343,6 @@ def mis_reservas():
 
     return render_template('mis-reservas.html', usuario=usuario)
 
-@app.route('/pago-reserva/<fecha_entrada>/<fecha_salida>/<int:cant_personas>', methods=['GET','POST'])
-def pago_reserva(fecha_entrada,fecha_salida,cant_personas):
-    usuario_id = session.get('usuario_id')
-    # Crear reserva tipo twin
-    # reserva_twin = Reserva(
-    #     habitacion_id = 1,
-    #     usuario_id = usuario_id,
-    #     detalle_pago_id = 1,
-    # )
-    # Crear reserva tipo matrimonial
-    # reserva_mat = Reserva(
-    #     habitacion_id = 2,
-    #     usuario_id = usuario_id,
-    #     detalle_pago_id = 1,
-    #     fecha_entrada = fecha_entrada,
-    #     fecha_salida = fecha_salida,
-    #     cant_personas = cant_personas
-    # )
-    if usuario_id:
-        # Recuperar el usuario de la base de datos utilizando el ID
-        usuario = Usuario.query.get(usuario_id)
-        if usuario:
-            # fecha_entrada = request.args.get('fecha_entrada')
-            # print('FECHA DE ENTRADA EN PAGO-RESERVA: ', fecha_entrada)
-            # fecha_salida = request.args.get('fecha_salida')
-            # cant_personas = request.args.get('cant_personas')
-        
-            return render_template('pago-reserva.html',usuario=usuario,fecha_entrada=fecha_entrada,fecha_salida=fecha_salida,cant_personas=cant_personas)
-    return render_template('pago-reserva.html')
-
-@app.route('/metodo-pago', methods=['GET', 'POST'])
-def metodo_pago():
-    usuario_id = session.get('usuario_id')
-    if usuario_id:
-        # Recuperar el usuario de la base de datos utilizando el ID
-        usuario = Usuario.query.get(usuario_id)
-        if usuario:
-            if request.method == 'POST':
-                return redirect(url_for('reserva_exitosa'))
-        
-    return render_template('metodo-pago.html',usuario =usuario)
-
-
-@app.route('/reserva-exitosa')
-def reserva_exitosa():
-    usuario_id = session.get('usuario_id')
-    if usuario_id:
-        # Recuperar el usuario de la base de datos utilizando el ID
-        usuario = Usuario.query.get(usuario_id)
-
-        if usuario:
-            # Renderizar la plantilla HTML y pasar el objeto 'usuario' a la plantilla
-            return render_template('reserva-exitosa.html', usuario=usuario)
-        
-    return render_template('reserva-exitosa.html')
-
-
 # Vista error 404
 def pagina_no_encontrada(error):
     usuario_test = {
@@ -340,6 +353,20 @@ def pagina_no_encontrada(error):
     }
     return render_template('404.html',usuario_test=usuario_test), 404
 
+# Guardar precio inicial
+@app.route('/guardar_datos', methods=['POST'])
+def guardar_datos():
+    print('ENTRE A LA VISTA GUARDAR_DATOOOOOS')
+    # Obtener los datos enviados desde la solicitud AJAX
+    datos = request.get_json()
+    # Guardar los datos en la sesión
+    session['precio_inicial'] = datos.get('precio_inicial')
+    session['precio_inicial2'] = datos.get('precio_inicial2')
+    print('PRECIO INICIAAAAAAL: ', session['precio_inicial'])
+    # Puedes guardar otros datos si es necesario
+
+    # Devolver una respuesta si es necesario
+    return jsonify({'mensaje': 'Datos guardados en la sesión correctamente'})
 
 if __name__=='__main__':
     app.add_url_rule('/query_string', view_func=query_string)
