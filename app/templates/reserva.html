@@ -359,11 +359,6 @@
                 
                 var totalPrecioInicialTexto = totalPrecioInicial.textContent;
                 var totalPrecioMatrimonialTexto = totalPrecioMatrimonial.textContent;
-                // Almacenar el contenido en localStorage
-                localStorage.setItem('totalPrecioInicial', totalPrecioInicialTexto);
-                localStorage.setItem('totalPrecioMatrimonial', totalPrecioMatrimonialTexto);
-                localStorage.setItem('tipoHabitacion1', tipoHabitacion1);
-                localStorage.setItem('descripcionHabitacion1', descripcionHabitacion1);
                 // Se habilita el div con display none
                 document.getElementById('detalle_reserva').style.display = 'block';
                 // Si hace click en el boton eliminar el div cambiar a display none
@@ -409,18 +404,33 @@
                 console.log('Entre el detalle del segundo boton')
                 precioUnitario = precio_noche_individual;
                 // Calcular 30% del total
-                precioInicial = (noches * precioUnitario * 0.3).toFixed(0);
+                var total = (noches * precioUnitario).toFixed(0);
+                var precioInicial = (noches * precioUnitario * 0.3).toFixed(0);
+                
+                var datos = {
+                    total: total,
+                    precio_inicial: precioInicial
+                };
+                // Realizar la solicitud AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "/guardar_datos", // Ruta en Flask para guardar los datos en la sesión
+                    data: JSON.stringify(datos), // Enviar los datos como JSON
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        
+                    },
+                    error: function (error) {
+                        console.error("Error en la solicitud AJAX: " + error.responseText);
+                    }
+                });
                 // Calcular el total
                 totalPrecioIndividual.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
                 totalPrecioInicial2.textContent = '$ ' + (noches * precioUnitario * 0.3).toFixed(0) + ' CLP';
                 
                 var totalPrecioInicial2Texto = totalPrecioInicial2.textContent;
                 var totalPrecioIndividualTexto = totalPrecioIndividual.textContent;
-                // Almacenar el contenido en localStorage
-                localStorage.setItem('totalPrecioInicial2', totalPrecioInicial2Texto);
-                localStorage.setItem('totalPrecioIndividual', totalPrecioIndividualTexto);
-                localStorage.setItem('tipoHabitacion2', tipoHabitacion2);
-                localStorage.setItem('descripcionHabitacion2', descripcionHabitacion2);
                 // Se habilita el div con display none
                 document.getElementById('detalle_reserva2').style.display = 'block';
                 // Si hace click en el boton eliminar el div cambiar a display none

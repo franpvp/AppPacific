@@ -304,9 +304,9 @@ def metodo_pago():
                         habitacion_id = 2,
                         usuario_id = usuario_id,
                         detalle_pago_id = 1,
-                        fecha_entrada = fecha_entrada,
-                        fecha_salida = fecha_salida,
-                        cant_personas = cant_personas
+                        fecha_entrada = session['fecha_entrada'],
+                        fecha_salida = session['fecha_salida'],
+                        cant_personas = session['cant_personas']
                     )
                     db.session.add(reserva_mat)
                     db.session.commit()
@@ -362,10 +362,10 @@ def guardar_datos():
     # Guardar los datos en la sesión
     session['precio_inicial'] = datos.get('precio_inicial')
     session['precio_inicial2'] = datos.get('precio_inicial2')
+    session['total'] = datos.get('total')
     print('PRECIO INICIAAAAAAL: ', session['precio_inicial'])
-    # Puedes guardar otros datos si es necesario
+    print('TOTAL : ', session['total'])
 
-    # Devolver una respuesta si es necesario
     return jsonify({'mensaje': 'Datos guardados en la sesión correctamente'})
 
 if __name__=='__main__':

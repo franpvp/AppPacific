@@ -45,7 +45,7 @@
 <!-- Información de la reserva -->
 <div class="container-fluid pt-5">
     <h1 class="titulo_pago_reserva">Pago Reserva</h1>
-    <div class="row">
+    <div class="row pb-5">
         <div class="col"></div>
         <div class="contenedor-info1 col-6 pt-5">
             <div class="row">
@@ -87,13 +87,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Fecha Ingreso: {{ session['fecha_entrada'] }}</li>
                     <li class="list-group-item">Fecha Salida: {{ session['fecha_salida'] }}</li>
-                    {% if session['precio_inicial'] %}
                     <li name="precio-inicial" class="list-group-item">Total a pagar (30% de la reserva): $ {{ session['precio_inicial']}} CLP</li>
-                    {% elif session['precio_inicial2'] %}
-                    <li name="precio-inicial2" class="list-group-item">{{ session['precio_inicial2']}}</li>
-                    {% else %}
-                    <p>No hay resultados</p>
-                    {% endif %}
                     <li class="list-group-item text-center">
                         <a href="/metodo-pago" class="boton btn btn-success text-center">
                             <img class="logo" src="{{ url_for('static', filename='img/tarjeta-de-credito.png') }}" alt="logo">
