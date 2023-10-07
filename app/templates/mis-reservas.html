@@ -53,29 +53,27 @@
                     <table id="tabla" class="table">
                         <thead>
                           <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Tipo_Habitación</th>
+                            <th scope="col">ID Reserva</th>
                             <th scope="col">Fecha LLegada: </th>
                             <th scope="col">Fecha Salida: </th>
                             <th scope="col">Hora LLegada: </th>
-                            <th scope="col">Total Reserva: </th>
                             <th scope="col"></th>
                           </tr>
                         </thead>
                         <tbody>
+                            {% for reserva in lista_reservas %}
                             <tr id="fila-1">
-                                <th scope="row">1</th>
-                                <td id="tipoHab"></td>
-                                <td id="fechaIngreso"></td>
-                                <td id="fechaSalida"></td>
+                                <th scope="row">{{ reserva.reserva_id }}</th>
+                                <td id="fechaIngreso">{{ reserva.fecha_entrada }}</td>
+                                <td id="fechaSalida">{{ reserva.fecha_salida }}</td>
                                 <td id="horaLLegada">15:00 P.M</td>
-                                <td id="total"></td>
                                 <td>
                                     <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
                                         <i class="fas fa-heart">Eliminar</i>
                                     </button>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

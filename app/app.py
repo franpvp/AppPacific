@@ -309,7 +309,6 @@ def metodo_pago():
                             pago_pendiente = int(session['total']),
                             fecha_pago = fecha
                         )
-                        
                         db.session.add(detalle_pago)
                         db.session.flush()
                         db.session.refresh(detalle_pago)
@@ -451,6 +450,7 @@ def metodo_pago():
                         )
                         db.session.add(reserva_mat)
                         db.session.commit()
+                    
 
                 return redirect(url_for('reserva_exitosa'))
     return render_template('metodo-pago.html',usuario=usuario)
@@ -478,10 +478,11 @@ def mis_reservas():
     if usuario_id:
         # Recuperar el usuario de la base de datos utilizando el ID
         usuario = Usuario.query.get(usuario_id)
-
-        if usuario:
+        lista_reservas = Reserva.query.filter_by(usuario_id=usuario_id).all()
+        print('LISTA RESERVAS: ', lista_reservas)
+        if usuario and lista_reservas:
             # Renderizar la plantilla HTML y pasar el objeto 'usuario' a la plantilla
-            return render_template('mis-reservas.html', usuario=usuario)
+            return render_template('mis-reservas.html', usuario=usuario,lista_reservas=lista_reservas)
 
     return render_template('mis-reservas.html', usuario=usuario)
 
