@@ -198,11 +198,12 @@
                                 <h5 class="card-title">Detalle Reserva</h5>
                             </div>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia">0</span> días</p></li>
-                                <li class="list-group-item"><p>Total: <span id="precio_matrimonial">0</span></p></p></li>
+                                <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia">0</span></p></li>
+                                <li class="list-group-item"><p>Total: <span id="total">{{ session['total'] }}</span></p></p></li>
                                 <li class="list-group-item"><p>Pago Reserva(30% del total):$ 
                                     <span id="precio_inicial" name="precio_inicial">{{ session['precio_inicial']}} </span>
                                 </li>
+                                <li class="list-group-item"><p>Total Pendiente: $ <span>{{ session['totalPendiente'] }}</span></p></p></li>
                                 <button id="btn_eliminar1" class="btn btn-danger" type="button">Eliminar Selección</button>
                             </ul>
                         </div>
@@ -217,33 +218,7 @@
                         <div class="col"></div>
                     </div>
                 </div>
-                <!-- Caso Detalle Reserva para Standard Twin -->
-                <div id="detalle_reserva2" class="row p-3" style="display: none;">
-                    <div class="col-12 d-flex justify-content-center">
-                        <div class="card text-center" style="width: 18rem;">
-                            <div class="card-body">
-                                <h4 class="card-title text-center">Detalle Reserva</h4>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia2">0</span> días</p></li>
-                                    <li class="list-group-item"><p>Total: $ <span id="precio_individual">0</span></p></p></li>
-                                    <li class="list-group-item"><p>Pago Reserva(30% del total):$ 
-                                        <span id="precio_inicial2" name="precio_inicial2">{{ session['precio_inicial2']}}</span> CLP
-                                    </li>
-                                    <button id="btn_eliminar2" class="btn btn-danger" type="button">Eliminar Selección</button>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col"></div>
-                        <div class="col-8">
-                            <div class="d-grid gap-2 pt-3 pb-3">
-                                <button class="btn btn-primary" type="submit">Reservar</button>
-                            </div>
-                        </div>
-                        <div class="col"></div>
-                    </div>
-                </div>
+                
             </div>
             
         </form>
@@ -252,152 +227,45 @@
 
 
 <script>
-    var fechaIngreso = document.getElementById('fecha_ingreso');
-    var fechaSalida = document.getElementById('fecha_salida');
-    
-    // Obtener el elemento donde se mostrará el número de noches de estadía
-    var nochesEstadia = document.getElementById('noches_estadia');
-    var btnSeleccionar = document.getElementById('btn_seleccionar');
-    var btnSeleccionar2 = document.getElementById('btn_seleccionar2');
-    
-    // Escuchar el evento de cambio en los campos de entrada de fecha
-    fechaIngreso.addEventListener('input', actualizarNochesEstadia);
-    fechaSalida.addEventListener('input', actualizarNochesEstadia);
 
-    btnSeleccionar.addEventListener('click', calcularNochesEstadiaMatrimonial);
-    btnSeleccionar2.addEventListener('click', calcularNochesEstadiaIndividual);
-
+    // Agregar datepicker a fecha de ingreso
     $('#datetimepicker_ingreso').datetimepicker({
         format: 'DD/MM/YYYY',
         minDate: moment().startOf('day') // Establecer el mínimo a la fecha actual
     });
 
+    // Agregar datepicker a fecha de salida
     $('#datetimepicker_salida').datetimepicker({
         format: 'DD/MM/YYYY',
         minDate: moment().startOf('day') // Establecer el mínimo a la fecha actual
     });
 
-    document.getElementById('reserva_form').addEventListener('submit', function(event) {
-        
-        // Obtener los valores de las fechas y la cantidad de huéspedes
-        var fechaIngreso = document.getElementById('fecha_ingreso').value;
-        var fechaSalida = document.getElementById('fecha_salida').value;
-        var cantidadHuespedes = document.getElementById('cantidad_huespedes').value;
 
-        // Validar si se han ingresado las fechas y la cantidad de huéspedes
-        if (fechaIngreso && fechaSalida && cantidadHuespedes) {
-            var datos = {
-                fechaIngreso: fechaIngreso,
-                fechaSalida: fechaSalida
-            };
-            // Almacenar el contenido en localStorage
-            localStorage.setItem('fechaIngreso', fechaIngreso);
-            localStorage.setItem('fechaSalida', fechaSalida);
 
-            // window.location.href = '/pago-reserva?datos='+JSON.stringify(datos);
-            
-        } else{
-            alert('Ingrese todos los campos');
-        }
-    });
-    // Función calcularNochesEstadiaMatrimonial
-    function calcularNochesEstadiaMatrimonial() {
-        console.log('Llegue a método calcularNochesEstadiaMatrimonial');
-        var tipoHabitacion1 = 'Standard Matrimonial';
-        var descripcionHabitacion1 = '1 Cama King Size - 1 Baño';
+    var fechaIngreso = document.getElementById('fecha_ingreso');
+    var fechaSalida = document.getElementById('fecha_salida');
+    var nochesEstadia = document.getElementById('noches_estadia');
+    var totalTexto = document.getElementById('total')
+    var precioIncialTexto = document.getElementById('precio_inicial')
+    var btnSeleccionar = document.getElementById('btn_seleccionar');
+    var btnSeleccionar2 = document.getElementById('btn_seleccionar2');
+
+    fechaIngreso.addEventListener('input', actualizarNochesEstadia);
+    fechaSalida.addEventListener('input', actualizarNochesEstadia);
+    btnSeleccionar.addEventListener('click', function () { calcularNochesEstadia(100000, 'detalle_reserva', 'precio_matrimonial', 'precio_inicial'); });
+    btnSeleccionar2.addEventListener('click', function () { calcularNochesEstadia(80000, 'detalle_reserva', 'precio_individual', 'precio_inicial'); });
+
+    // Función para calcular noches de estadía y actualizar detalles de reserva
+    function calcularNochesEstadia(precioNoche, detalleReservaId, precioTotalId, precioInicialId) {
         var fechaIngresoValue = fechaIngreso.value;
         var fechaSalidaValue = fechaSalida.value;
-        var precio_noche_matrimonial = 100000;
-        var totalPrecioMatrimonial = document.getElementById('precio_matrimonial');
-        var totalPrecioInicial = document.getElementById('precio_inicial');
-        var precioUnitario = 0;
 
         if (fechaIngresoValue && fechaSalidaValue) {
-            // Separar las partes de la fecha
+          
             var fechaIngresoParts = fechaIngresoValue.split('/');
             var fechaSalidaParts = fechaSalidaValue.split('/');
 
-            // Crear objetos Date
-            var fechaIngresoDate = new Date(fechaIngresoParts[2], fechaIngresoParts[1] - 1, fechaIngresoParts[0]);
-            var fechaSalidaDate = new Date(fechaSalidaParts[2], fechaSalidaParts[1] - 1, fechaSalidaParts[0]);
-            console.log('fechaIngresoDate: ', fechaIngresoDate)
-            console.log('fechaSalidaDate: ', fechaSalidaDate)
-
-            // Calcular la diferencia en milisegundos
-            var diferencia = fechaSalidaDate - fechaIngresoDate;
-            console.log('DIFERENCIA: ', diferencia)
-
-
-            // Calcular el número de noches (dividiendo la diferencia entre milisegundos en días)
-            var noches = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-            console.log('NOCHES: ', noches)
-
-            // Verificar cuál botón se ha clicado y establecer el precio unitario correspondiente
-            if (btnSeleccionar.id === 'btn_seleccionar') {
-                console.log('Entre el detalle del primer boton')
-                precioUnitario = precio_noche_matrimonial;
-                // Calcular 30% del total
-                var total = parseInt((noches * precioUnitario).toFixed(0));
-                var precioInicial = parseInt((noches * precioUnitario * 0.3).toFixed(0));
-                console.log('TOTAL: ', total)
-                console.log('PRECIO INICIAL: ', precioInicial)
-                
-                var datos = {
-                    total: total,
-                    precio_inicial: precioInicial
-                };
-                // Realizar la solicitud AJAX
-                $.ajax({
-                    type: "POST",
-                    url: "/guardar_datos", // Ruta en Flask para guardar los datos en la sesión
-                    data: JSON.stringify(datos), // Enviar los datos como JSON
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        
-                    },
-                    error: function (error) {
-                        console.error("Error en la solicitud AJAX: " + error.responseText);
-                    }
-                });
-
-                
-                // Calcular el total
-                totalPrecioMatrimonial.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
-                totalPrecioInicial.textContent = '$ ' + (noches * precioUnitario * 0.3).toFixed(0) + ' CLP';
-                
-                var totalPrecioInicialTexto = totalPrecioInicial.textContent;
-                var totalPrecioMatrimonialTexto = totalPrecioMatrimonial.textContent;
-                // Se habilita el div con display none
-                document.getElementById('detalle_reserva').style.display = 'block';
-                // Si hace click en el boton eliminar el div cambiar a display none
-                document.getElementById('btn_eliminar1').addEventListener('click', eliminarDetalle1)
-            }
-            // Actualizar los elementos HTML con los valores calculados
-            nochesEstadia.textContent = noches;
-        } else {
-            nochesEstadia.textContent = '0';
-        }
-    }
-    // Función calcularNochesEstadiaIndividual
-    function calcularNochesEstadiaIndividual() {
-        console.log('Llegue a método calcularNochesEstadiaIndividual')
-        var tipoHabitacion2 = 'Standard Twin';
-        var descripcionHabitacion2 = '2 Camas individuales - 1 Baño';
-        var fechaIngresoValue = fechaIngreso.value;
-        var fechaSalidaValue = fechaSalida.value;
-        var precio_noche_individual = 80000;
-        var totalPrecioIndividual = document.getElementById('precio_individual');
-        var totalPrecioInicial2 = document.getElementById('precio_inicial2');
-        var nochesEstadia2 = document.getElementById('noches_estadia2');
-        var precioUnitario = 0;
-
-        if (fechaIngresoValue && fechaSalidaValue) {
-            // Separar las partes de la fecha
-            var fechaIngresoParts = fechaIngresoValue.split('/');
-            var fechaSalidaParts = fechaSalidaValue.split('/');
-
-            // Crear objetos Date
+            // Actualizar elementos HTML
             var fechaIngresoDate = new Date(fechaIngresoParts[2], fechaIngresoParts[1] - 1, fechaIngresoParts[0]);
             var fechaSalidaDate = new Date(fechaSalidaParts[2], fechaSalidaParts[1] - 1, fechaSalidaParts[0]);
             console.log('fechaIngresoDate: ', fechaIngresoDate)
@@ -409,63 +277,53 @@
             var noches = Math.floor(diferencia / (1000 * 60 * 60 * 24));
             console.log('Noches estadía: ' + noches);
 
-            // Verificar cuál botón se ha clicado y establecer el precio unitario correspondiente
-            if (btnSeleccionar2.id === 'btn_seleccionar2') {
-                console.log('Entre el detalle del segundo boton')
-                precioUnitario = precio_noche_individual;
-                // Calcular 30% del total
-                var total = (noches * precioUnitario).toFixed(0);
-                var precioInicial = (noches * precioUnitario * 0.3).toFixed(0);
-                
-                var datos = {
-                    total: total,
-                    precio_inicial: precioInicial
-                };
-                // Realizar la solicitud AJAX
-                $.ajax({
-                    type: "POST",
-                    url: "/guardar_datos", // Ruta en Flask para guardar los datos en la sesión
-                    data: JSON.stringify(datos), // Enviar los datos como JSON
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        
-                    },
-                    error: function (error) {
-                        console.error("Error en la solicitud AJAX: " + error.responseText);
-                    }
-                });
-                // Calcular el total
-                totalPrecioIndividual.textContent = '$ ' + (noches * precioUnitario).toFixed(0) + ' CLP';
-                totalPrecioInicial2.textContent = '$ ' + (noches * precioUnitario * 0.3).toFixed(0) + ' CLP';
-                
-                var totalPrecioInicial2Texto = totalPrecioInicial2.textContent;
-                var totalPrecioIndividualTexto = totalPrecioIndividual.textContent;
-                // Se habilita el div con display none
-                document.getElementById('detalle_reserva2').style.display = 'block';
-                // Si hace click en el boton eliminar el div cambiar a display none
-                document.getElementById('btn_eliminar2').addEventListener('click',eliminarDetalle2)
-            }
-            nochesEstadia2.textContent = noches;
+            var total = Math.round(noches * precioNoche);
+            console.log("TOTAL: ",total)
+            var precioInicial = Math.round(total * 0.3);
+            var totalPendiente = total*0.7;
             
+            // Realizar solicitud AJAX
+            var datos = {
+                total: total,
+                precio_inicial: precioInicial,
+                totalPendiente: totalPendiente
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/guardar_datos",
+                data: JSON.stringify(datos),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+  
+                },
+                error: function (error) {
+                    console.error("Error en la solicitud AJAX: " + error.responseText);
+                }
+            });
+
+            nochesEstadia.textContent = noches;
+            totalTexto.textContent = total;
+            precioIncialTexto.textContent = precioInicial;
+
+            // Mostrar el detalle de reserva
+            document.getElementById(detalleReservaId).style.display = 'block';
+
+            // Agregar manejador de eventos para eliminar detalle
+            document.getElementById('btn_eliminar1').addEventListener('click', function () {
+                document.getElementById(detalleReservaId).style.display = 'none';
+            });
         } else {
-            nochesEstadia2.textContent = '0';
+            nochesEstadia.textContent = '0';
         }
     }
 
     // Función para actualizar el número de noches de estadía en tiempo real
     function actualizarNochesEstadia() {
-        calcularNochesEstadia();
-        
+        calcularNochesEstadia(100000, 'detalle_reserva', 'precio_matrimonial', 'precio_inicial');
     }
-    // Función para eliminar detalle de reserva
-    function eliminarDetalle1(){
-        document.getElementById('detalle_reserva').style.display = 'none';
-        
-    }
-    function eliminarDetalle2(){
-        document.getElementById('detalle_reserva2').style.display = 'none';
-        }
+
 </script>
 
 

@@ -502,13 +502,15 @@ def guardar_datos():
     print('ENTRE A LA VISTA GUARDAR_DATOS')
     # Obtener los datos enviados desde la solicitud AJAX
     datos = request.get_json()
+    print("DATOS#####",datos)
     # Guardar los datos en la sesión
     session['precio_inicial'] = datos.get('precio_inicial')
     session['precio_inicial2'] = datos.get('precio_inicial2')
     session['total'] = datos.get('total')
-    print('PRECIO INICIAL: ', session['precio_inicial'])
-    print('PRECIO INICIAL2: ', session['precio_inicial2'])
-    print('TOTAL : ', session['total'])
+    session['total2'] = datos.get('total2')
+    session['totalPendiente'] = datos.get('totalPendiente')
+    session['totalPendiente2'] = datos.get('totalPendiente2')
+
 
     return jsonify({'mensaje': 'Datos guardados en la sesión correctamente'})
 
