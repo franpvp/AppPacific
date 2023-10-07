@@ -272,14 +272,13 @@ def pago_reserva():
 # Vista Método de Pago
 @app.route('/metodo-pago', methods=['GET', 'POST'])
 def metodo_pago():
+
     usuario_id = session.get('usuario_id')
     habitacion_twin = Habitacion.query.filter_by(habitacion_id=1).first()
     habitacion_mat = Habitacion.query.filter_by(habitacion_id=2).first()
     id_twin = habitacion_twin.habitacion_id
     id_mat = habitacion_mat.habitacion_id
-    id_metodo_credito = session.get('idCredito')
-    id_metodo_debito = session.get('idDebito')
-    id_metodo_transf = session.get('idTransf')
+    idMetodoPago = session.get('idMetodoPago')
     fecha_formateada = session.get('fechaFormateada')
     print('FECHA FORMATEADA: ' , fecha_formateada)
     fecha = datetime.strptime(fecha_formateada, '%d-%m-%Y').date()
@@ -290,10 +289,6 @@ def metodo_pago():
     precio_inicial = session.get('precio_inicial')
     total = session.get('total')
     # Obtener el último detalle_pago_id
-    
-    print('ID METODO PAGO CREDITO: ', id_metodo_credito)
-    print('ID METODO PAGO DEBITO: ', id_metodo_credito)
-    print('ID METODO PAGO TRANSFERENCIA: ',id_metodo_credito)
     print('FECHA PAGO: ', fecha)
     if usuario_id:
         # Recuperar el usuario de la base de datos utilizando el ID
@@ -301,12 +296,12 @@ def metodo_pago():
         if usuario:
             if request.method == 'POST':
                 if id_twin:
-                    if id_metodo_credito:
+                    if idMetodoPago == 1:
                         # Detalle pago
                         detalle_pago = DetallePago(
-                            metodo_pago_id = id_metodo_credito,
+                            metodo_pago_id = int(idMetodoPago),
                             pago_inicial = int(session['precio_inicial']),
-                            pago_pendiente = int(session['total']),
+                            pago_pendiente = int(session['totalPendiente']),
                             fecha_pago = fecha
                         )
                         db.session.add(detalle_pago)
@@ -325,11 +320,11 @@ def metodo_pago():
                         )
                         db.session.add(reserva_twin)
                         db.session.commit()
-                    elif id_metodo_debito:
+                    elif idMetodoPago == 2:
                         detalle_pago = DetallePago(
-                            metodo_pago_id = id_metodo_debito,
+                            metodo_pago_id = int(idMetodoPago),
                             pago_inicial = int(session['precio_inicial']),
-                            pago_pendiente = int(session['total']),
+                            pago_pendiente = int(session['totalPendiente']),
                             fecha_pago = fecha
                         )
                         db.session.add(detalle_pago)
@@ -348,11 +343,11 @@ def metodo_pago():
                         )
                         db.session.add(reserva_twin)
                         db.session.commit()
-                    elif id_metodo_transf:
+                    elif idMetodoPago == 3:
                         detalle_pago = DetallePago(
-                            metodo_pago_id = id_metodo_transf,
+                            metodo_pago_id = int(idMetodoPago),
                             pago_inicial = int(session['precio_inicial']),
-                            pago_pendiente = int(session['total']),
+                            pago_pendiente = int(session['totalPendiente']),
                             fecha_pago = fecha
                         )
                         
@@ -373,12 +368,12 @@ def metodo_pago():
                         db.session.add(reserva_twin)
                         db.session.commit()
                 elif id_mat:
-                    if id_metodo_credito:
+                    if idMetodoPago == 1:
                         # Detalle pago
                         detalle_pago = DetallePago(
-                            metodo_pago_id = id_metodo_credito,
+                            metodo_pago_id = int(idMetodoPago),
                             pago_inicial = int(session['precio_inicial']),
-                            pago_pendiente = int(session['total']),
+                            pago_pendiente = int(session['totalPendiente']),
                             fecha_pago = fecha
                         )
                         
@@ -400,12 +395,12 @@ def metodo_pago():
                         db.session.add(reserva_mat)
                         db.session.commit()
 
-                    elif id_metodo_debito:
+                    elif idMetodoPago == 2:
                         # Detalle pago
                         detalle_pago = DetallePago(
-                            metodo_pago_id = id_metodo_debito,
+                            metodo_pago_id = int(idMetodoPago),
                             pago_inicial = int(session['precio_inicial']),
-                            pago_pendiente = int(session['total']),
+                            pago_pendiente = int(session['totalPendiente']),
                             fecha_pago = fecha
                         )
                         
@@ -425,12 +420,12 @@ def metodo_pago():
                         db.session.add(reserva_mat)
                         db.session.commit()
 
-                    elif id_metodo_transf:
+                    elif idMetodoPago == 3:
                         # Detalle pago
                         detalle_pago = DetallePago(
-                            metodo_pago_id = id_metodo_transf,
+                            metodo_pago_id = int(idMetodoPago),
                             pago_inicial = int(session['precio_inicial']),
-                            pago_pendiente = int(session['total']),
+                            pago_pendiente = int(session['totalPendiente']),
                             fecha_pago = fecha
                         )
                         
@@ -523,16 +518,11 @@ def guardar_fecha_actual():
     return jsonify({'mensaje': 'Datos guardados en la sesión correctamente'})
 
 @app.route('/guardar_id_metodo_pago', methods=['POST'])
-def guardar_valores_en_sesion():
+def guardar_id_metodo_pago():
+    print("entreeee")
     data = request.get_json()
-    idCredito = data.get('idCredito')
-    idDebito = data.get('idDebito')
-    idTransf = data.get('idTransf')
-
-    # Guardar los valores en la sesión
-    session['idCredito'] = idCredito
-    session['idDebito'] = idDebito
-    session['idTransf'] = idTransf
+    idMetodoPago = data.get('idMetodoPago')
+    session['idMetodoPago'] = idMetodoPago
 
     return jsonify(success=True)
 
