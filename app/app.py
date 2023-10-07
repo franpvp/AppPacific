@@ -536,7 +536,21 @@ def guardar_valores_en_sesion():
     session['idDebito'] = idDebito
     session['idTransf'] = idTransf
 
-    return jsonify(success=True) 
+    return jsonify(success=True)
+
+@app.route('/eliminar_reserva', methods=['POST'])
+def eliminar_reserva():
+    data = request.get_json()
+    reserva_id = data.get('reserva_id')
+
+    # Realiza la eliminación en la base de datos utilizando SQLAlchemy
+    reserva = Reserva.query.get(reserva_id)
+    if reserva:
+        db.session.delete(reserva)
+        db.session.commit()
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False})
 
 if __name__=='__main__':
     app.add_url_rule('/query_string', view_func=query_string)

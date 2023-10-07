@@ -62,13 +62,13 @@
                         </thead>
                         <tbody>
                             {% for reserva in lista_reservas %}
-                            <tr id="fila-1">
+                            <tr id="fila-{{ reserva.reserva_id }}">
                                 <th scope="row">{{ reserva.reserva_id }}</th>
                                 <td id="fechaIngreso">{{ reserva.fecha_entrada }}</td>
                                 <td id="fechaSalida">{{ reserva.fecha_salida }}</td>
                                 <td id="horaLLegada">15:00 P.M</td>
                                 <td>
-                                    <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">
+                                    <button type="button" class="btn btn-danger" onclick="eliminarReserva('{{ reserva.reserva_id }}')">
                                         <i class="fas fa-heart">Eliminar</i>
                                     </button>
                                 </td>
@@ -84,68 +84,30 @@
 </div>
 
 <script>
-    var nombre = localStorage.getItem('nombre');
-    var fechaIngreso = localStorage.getItem('fechaIngreso');
-    var fechaSalida = localStorage.getItem('fechaSalida');
-    var totalPrecioMatrimonial = localStorage.getItem('totalPrecioMatrimonial');
-    var totalPrecioIndividual = localStorage.getItem('totalPrecioIndividual');
-    
-    var tipoHabitacion1 = localStorage.getItem('tipoHabitacion1');
-    var tipoHabitacion2 = localStorage.getItem('tipoHabitacion2');
-    var descripcionHabitacion1 = localStorage.getItem('descripcionHabitacion1');
-    var descripcionHabitacion2 = localStorage.getItem('descripcionHabitacion2');
-    var tipoHab = '';
-    var pagoReserva = '';
-    var total = 0;
-
-    document.getElementById('nombre').textContent = 'Bienvenido ' + nombre;
-    document.getElementById('fechaIngreso').textContent = fechaIngreso;
-    document.getElementById('fechaSalida').textContent = fechaSalida;
-
-    if (tipoHabitacion1 === 'Standard Matrimonial') {
-        tipoHab = tipoHabitacion1;
-        total = parseFloat(totalPrecioMatrimonial);
-        pagoReserva = total * 0.3;
-        console.log('TIPO HABITACION: ' + tipoHab);
-        console.log('TOTAL: ' + total);
-        document.getElementById('tipoHab').textContent = tipoHabitacion1;
-        document.getElementById('total').textContent = totalPrecioMatrimonial;
-
-        console.log('TIPO HABITACION2: ' + tipoHab);
-        console.log('TOTAL2: ' + total);
-        console.log('PAGO RESERVA2: ' + pagoReserva);
-        
-    } else if (tipoHabitacion2 === 'Standard Twin') {
-        tipoHab = tipoHabitacion2;
-        total = parseFloat(totalPrecioIndividual);
-        document.getElementById('tipoHab').textContent = tipoHabitacion2;
-        document.getElementById('total').textContent = totalPrecioIndividual;
-    }
-
-
-    // Evento para eliminar reserva
-    document.getElementById('btn_eliminar1').addEventListener('click', eliminarReserva)
 
     // Función para eliminar reserva
-    function eliminarFila(button) {
-        // Obtener el elemento padre (la fila) del botón
-        var fila = button.parentNode.parentNode;
-
-        // Obtener el ID de la fila
-        var idFila = fila.id;
-
-        // Eliminar la fila (por ejemplo, con jQuery)
-        fila.parentNode.removeChild(fila);
-
-        // Eliminar los datos del localStorage utilizando el ID de la fila
-        localStorage.removeItem(idFila);
-        localStorage.removeItem('fila-' + idFila);
-        localStorage.removeItem('tipoHab-' + idFila);
-        localStorage.removeItem('fechaIngreso-' + idFila);
-        localStorage.removeItem('fechaSalida-' + idFila);
-        localStorage.removeItem('horaLLegada-' + idFila);
-        localStorage.removeItem('total-' + idFila);
-    }  
+    function eliminarReserva(reservaId) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta reserva?')) {
+        $.ajax({
+            type: 'POST',
+            url: '/eliminar_reserva',  // Ruta en Flask para eliminar la reserva
+            data: JSON.stringify({ reserva_id: reservaId }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    // Eliminar la fila de la tabla en el frontend
+                    $('#fila-' + reservaId).remove();
+                } else {
+                    alert('No se pudo eliminar la reserva.');
+                }
+            },
+            error: function (error) {
+                console.error('Error en la solicitud AJAX: ' + error.responseText);
+            }
+        });
+    }
+} 
 
 </script>
 
