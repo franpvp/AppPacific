@@ -281,35 +281,7 @@ body%}
         input.value = '';
     }
   });
-
-  // Crear un nuevo objeto Date
-  var fechaActual = new Date();
-  var fecha = new Date(fechaActual);
-
-  var dia = fechaActual.getDate();
-  var mes = fechaActual.getMonth() + 1;
-  var año = fechaActual.getFullYear();
-
-// Formatear los componentes como cadena de texto con el formato deseado
-  var fechaFormateada = dia + '-' + mes + '-' + año;
-
-  var fecha = {
-    fechaFormateada: fechaFormateada
-  };
-  // Realizar la solicitud AJAX
-  $.ajax({
-      type: "POST",
-      url: "/guardar_fecha_actual", // Ruta en Flask para guardar los datos en la sesión
-      data: JSON.stringify(fecha), // Enviar los datos como JSON
-      contentType: "application/json; charset=utf-8",
-      dataType: "json",
-      success: function (response) {
-          
-      },
-      error: function (error) {
-          console.error("Error en la solicitud AJAX: " + error.responseText);
-      }
-  });
+  
 
   btnCredito = document.getElementById('credito');
   btnDebito = document.getElementById('debito');

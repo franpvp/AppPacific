@@ -266,9 +266,6 @@ def pago_reserva():
         # Recuperar el usuario de la base de datos utilizando el ID
         usuario = Usuario.query.get(usuario_id)
         if usuario:
-            fecha_entrada = session.get('fecha_entrada')
-            fecha_salida = session.get('fecha_salida')
-            cant_personas = session.get('cant_personas')
             return render_template('pago-reserva.html',usuario=usuario)
     return render_template('pago-reserva.html')
 
@@ -284,6 +281,7 @@ def metodo_pago():
     id_metodo_debito = session.get('idDebito')
     id_metodo_transf = session.get('idTransf')
     fecha_formateada = session.get('fechaFormateada')
+    print('FECHA FORMATEADA: ' , fecha_formateada)
     fecha = datetime.strptime(fecha_formateada, '%d-%m-%Y').date()
     fecha_entrada = session.get('fecha_entrada')
     fecha_salida = session.get('fecha_salida')
@@ -519,7 +517,6 @@ def guardar_fecha_actual():
     data = request.get_json()
     print('DATAAA: ',data)
     fechaFormateada = data['fechaFormateada']
-    
     print('FECHA ACTUAL: ', fechaFormateada)
     # Guardar fechaTexto_date en la sesión
     session['fechaFormateada'] = fechaFormateada
