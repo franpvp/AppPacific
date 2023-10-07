@@ -268,12 +268,12 @@
     btnSeleccionar2.addEventListener('click', calcularNochesEstadiaIndividual);
 
     $('#datetimepicker_ingreso').datetimepicker({
-        format: 'DD-MM-YYYY',
+        format: 'DD/MM/YYYY',
         minDate: moment().startOf('day') // Establecer el mínimo a la fecha actual
     });
 
     $('#datetimepicker_salida').datetimepicker({
-        format: 'DD-MM-YYYY',
+        format: 'DD/MM/YYYY',
         minDate: moment().startOf('day') // Establecer el mínimo a la fecha actual
     });
 
@@ -314,27 +314,36 @@
 
         if (fechaIngresoValue && fechaSalidaValue) {
             // Separar las partes de la fecha
-            var fechaIngresoParts = fechaIngresoValue.split('-');
-            var fechaSalidaParts = fechaSalidaValue.split('-');
+            var fechaIngresoParts = fechaIngresoValue.split('/');
+            var fechaSalidaParts = fechaSalidaValue.split('/');
 
             // Crear objetos Date
             var fechaIngresoDate = new Date(fechaIngresoParts[2], fechaIngresoParts[1] - 1, fechaIngresoParts[0]);
             var fechaSalidaDate = new Date(fechaSalidaParts[2], fechaSalidaParts[1] - 1, fechaSalidaParts[0]);
+            console.log('fechaIngresoDate: ', fechaIngresoDate)
+            console.log('fechaSalidaDate: ', fechaSalidaDate)
 
             // Calcular la diferencia en milisegundos
             var diferencia = fechaSalidaDate - fechaIngresoDate;
+            console.log('DIFERENCIA: ', diferencia)
+
 
             // Calcular el número de noches (dividiendo la diferencia entre milisegundos en días)
             var noches = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+            console.log('NOCHES: ', noches)
 
             // Verificar cuál botón se ha clicado y establecer el precio unitario correspondiente
             if (btnSeleccionar.id === 'btn_seleccionar') {
                 console.log('Entre el detalle del primer boton')
                 precioUnitario = precio_noche_matrimonial;
                 // Calcular 30% del total
-                var precioInicial = (noches * precioUnitario * 0.3).toFixed(0);
+                var total = parseInt((noches * precioUnitario).toFixed(0));
+                var precioInicial = parseInt((noches * precioUnitario * 0.3).toFixed(0));
+                console.log('TOTAL: ', total)
+                console.log('PRECIO INICIAL: ', precioInicial)
                 
                 var datos = {
+                    total: total,
                     precio_inicial: precioInicial
                 };
                 // Realizar la solicitud AJAX
@@ -385,13 +394,14 @@
 
         if (fechaIngresoValue && fechaSalidaValue) {
             // Separar las partes de la fecha
-            var fechaIngresoParts = fechaIngresoValue.split('-');
-            var fechaSalidaParts = fechaSalidaValue.split('-');
+            var fechaIngresoParts = fechaIngresoValue.split('/');
+            var fechaSalidaParts = fechaSalidaValue.split('/');
 
             // Crear objetos Date
             var fechaIngresoDate = new Date(fechaIngresoParts[2], fechaIngresoParts[1] - 1, fechaIngresoParts[0]);
             var fechaSalidaDate = new Date(fechaSalidaParts[2], fechaSalidaParts[1] - 1, fechaSalidaParts[0]);
-
+            console.log('fechaIngresoDate: ', fechaIngresoDate)
+            console.log('fechaSalidaDate: ', fechaSalidaDate)
             // Calcular la diferencia en milisegundos
             var diferencia = fechaSalidaDate - fechaIngresoDate;
 

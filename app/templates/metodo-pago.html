@@ -67,26 +67,34 @@ body%}
   <div class="container">
     <div class="row pt-4 pb-5">
         <div class="col"></div>
-        <div class="col">
-            <button name="credito-debito" class="contenedor-credito-debito btn btn-light">
-                <img
-                  src="{{ url_for('static', filename='img/banco.png') }}"
-                  alt="credito"
-                />
-            </button>
+        <div class="col text-center">
+          <div class="contenedor-credito-debito">
+              <button id="credito" name="credito" class="btn btn-light btn-pago" data-valor="1" data-target="form-credito">
+                  <img src="{{ url_for('static', filename='img/tarjeta-de-credito.png') }}" alt="credito" />
+              </button>
+              <div class="text-bajo-botón">Crédito</div>
+          </div>
         </div>
-        <div class="col">
-            <button name="transferencia" class="contenedor-transferencia btn btn-light">
-                <img
-                  src="{{ url_for('static', filename='img/tarjeta-de-credito.png') }}"
-                  alt="transferencia"
-                />
+        <div class="col text-center">
+          <div class="contenedor-credito-debito">
+            <button id="debito" name="debito" class="btn btn-light btn-pago" data-valor="2" data-target="form-debito">
+                <img src="{{ url_for('static', filename='img/tarjeta-de-debito.png') }}" alt="debito" />
             </button>
+            <div class="text-bajo-botón">Débito</div>
+          </div>
         </div>
+        <div class="col text-center">
+          <div class="contenedor-credito-debito">
+            <button id="transferencia" name="transferencia" class="btn btn-light btn-pago" data-valor="3" data-target="detalle_transferencia">
+                <img src="{{ url_for('static', filename='img/banco.png') }}" alt="transferencia" />
+            </button>
+            <div class="text-bajo-botón">Transferencia</div>
+          </div>
+      </div>
         <div class="col"></div>
     </div>
-    
-    <form action="/metodo-pago" method="post">
+    <!-- Detalle Pago Crédito -->
+    <form id="form-credito" action="/metodo-pago" method="post" style="display: none;">
         <div class="row">
             <div class="col"></div>
             <div class="col-9">
@@ -141,9 +149,9 @@ body%}
         <div class="col"></div>
       </div>
       <!-- Detalle pago -->
-      <div id="detalle_reserva" class="row p-3">
+      <div class="row p-3">
         <div class="col-12 d-flex justify-content-center">
-            <div class="card text-center" style="width: 18rem;">
+            <div class="card text-center" style="width: 24rem;">
                 <div class="card-body">
                     <h4 class="card-title text-center">Detalle Pago</h4>
                     <ul class="list-group list-group-flush">
@@ -155,22 +163,115 @@ body%}
                 </div>
             </div>
         </div>
-    </div>
-      <div class="row pt-3 pb-5">
+        <div class="row">
+          <div class="col"></div>
+          <div class="col-8">
+              <div class="d-grid gap-2 pt-3 pb-3">
+                  <button class="btn btn-primary" type="submit">Pagar</button>
+              </div>
+          </div>
+          <div class="col"></div>
+        </div>
+      </div>
+    </form>
+    <!-- Detalle Pago Débito -->
+    <form id="form-debito" action="/metodo-pago" method="post" style="display: none;">
+      <div class="row">
+          <div class="col"></div>
+          <div class="col-9">
+              <div class="form-floating mb-3 pb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="input-titular"
+                    pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+ [A-Za-záéíóúÁÉÍÓÚñÑ\s]+$"
+                    placeholder="name@example.com"
+                    required
+                  />
+                  <label for="floatingInput">Titular de tarjeta</label>
+              </div>
+          </div>
+          <div class="col"></div>
+      </div>
+      <div class="row">
+          <div class="col"></div>
+          <div class="col-9   ">
+              <div class="form-floating pb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="input-numero"
+                    maxlength="19"
+                    pattern="^\d{4} \d{4} \d{4} \d{4}$"
+                    title="Ingresa solo números"
+                    placeholder="numeroTarjeta"
+                    required
+                  />
+                  <label for="floatingPassword">Número de tarjeta</label>
+                </div>
+          </div>
+          <div class="col"></div>
+      </div>
+    <!-- Detalle pago -->
+    <div class="row p-3">
+      <div class="col-12 d-flex justify-content-center">
+          <div class="card text-center" style="width: 24rem;">
+              <div class="card-body">
+                  <h4 class="card-title text-center">Detalle Pago</h4>
+                  <ul class="list-group list-group-flush">
+                      <li class="list-group-item"><p>Total Pendiente: $ <span>{{ session['total'] }} CLP</span></p></p></li>
+                      <li class="list-group-item"><p>Pago Reserva (30% del total): $ 
+                          <span id="precio_inicial2" name="precio_inicial2">{{ session['precio_inicial'] }}</span> CLP
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+      <div class="row">
         <div class="col"></div>
         <div class="col-8">
-            <div class="d-grid gap-2 pt-4 pb-4">
+            <div class="d-grid gap-2 pt-3 pb-3">
                 <button class="btn btn-primary" type="submit">Pagar</button>
             </div>
         </div>
         <div class="col"></div>
+      </div>
     </div>
-    </form>
+  </form>
+    <!-- Caso detalle transferencia -->
+    <div id="detalle_transferencia" class="row p-3" style="display: none;">
+      <div class="col-12 d-flex justify-content-center">
+          <div class="card text-center" style="width: 22rem;">
+              <div class="card-body">
+                  <h4 class="card-title text-center">Pago transferencia</h4>
+                  <ul class="list-group list-group-flush">
+                      <li class="list-group-item"><p>Intitución Financiera: Banco de Chile</p></li>
+                      <li class="list-group-item"><p>Tipo Cuenta: Cuenta Corriente</p></li>
+                      <li class="list-group-item"><p>Rut: 12.345.678-9</p></li>
+                      <li class="list-group-item"><p>Email: hotelpacific@gmail.com</p></li>
+                      <li class="list-group-item"><p>Total Pendiente: $ <span>{{ session['total']}} CLP</span></p></p></li>
+                      <li class="list-group-item"><p>Pago Reserva(30% del total):$ 
+                          <span>{{ session['precio_inicial']}} CLP</span> 
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-8">
+            <div class="d-grid gap-2 pt-3 pb-3">
+                <button class="btn btn-primary" type="submit">Pagar</button>
+            </div>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-    document.getElementById('input-numero').addEventListener('input', function (e) {
+  document.getElementById('input-numero').addEventListener('input', function (e) {
     const input = e.target;
     const value = input.value.replace(/\s/g, '');
 
@@ -179,7 +280,79 @@ body%}
     } else {
         input.value = '';
     }
-});
-</script>
+  });
 
+  // Crear un nuevo objeto Date
+  var fechaActual = new Date();
+  var fecha = new Date(fechaActual);
+
+  var dia = fechaActual.getDate();
+  var mes = fechaActual.getMonth() + 1;
+  var año = fechaActual.getFullYear();
+
+// Formatear los componentes como cadena de texto con el formato deseado
+  var fechaFormateada = dia + '-' + mes + '-' + año;
+
+  var fecha = {
+    fechaFormateada: fechaFormateada
+  };
+  // Realizar la solicitud AJAX
+  $.ajax({
+      type: "POST",
+      url: "/guardar_fecha_actual", // Ruta en Flask para guardar los datos en la sesión
+      data: JSON.stringify(fecha), // Enviar los datos como JSON
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function (response) {
+          
+      },
+      error: function (error) {
+          console.error("Error en la solicitud AJAX: " + error.responseText);
+      }
+  });
+
+  btnCredito = document.getElementById('credito');
+  btnDebito = document.getElementById('debito');
+  btnTransferencia = document.getElementById('transferencia');
+  // Botón Crédito
+  document.getElementById('credito').addEventListener('click', function() {
+    document.getElementById('form-credito').style.display = 'block';
+    document.getElementById('form-debito').style.display = 'none';
+    document.getElementById('detalle_transferencia').style.display = 'none';
+  });
+  document.getElementById('debito').addEventListener('click', function() {
+    document.getElementById('form-credito').style.display = 'none';
+    document.getElementById('form-debito').style.display = 'block';
+    document.getElementById('detalle_transferencia').style.display = 'none';
+  });
+  document.getElementById('transferencia').addEventListener('click', function() {
+    document.getElementById('form-credito').style.display = 'none';
+    document.getElementById('form-debito').style.display = 'none';
+    document.getElementById('detalle_transferencia').style.display = 'block';
+  });
+
+  // Obtener el valor numérico del atributo data-valor utilizando el id
+  var idCredito = parseInt(document.getElementById('credito').getAttribute('data-valor'));
+  var idDebito = parseInt(document.getElementById('debito').getAttribute('data-valor'));
+  var idTransf = parseInt(document.getElementById('transferencia').getAttribute('data-valor'));
+
+  // Guardar los valores en las sesiones
+  $.ajax({
+    type: "POST",
+    url: "/guardar_id_metodo_pago",
+    data: JSON.stringify({ 
+        idCredito: idCredito,
+        idDebito: idDebito,
+        idTransf: idTransf
+    }),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: function (response) {
+        // Manejar la respuesta del servidor si es necesario
+    },
+    error: function (error) {
+        console.error("Error en la solicitud AJAX: " + error.responseText);
+    }
+  });
+</script>
 {% endblock %}

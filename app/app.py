@@ -1,4 +1,5 @@
 # Se importa la clase Flask
+from datetime import datetime
 import json
 from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -90,7 +91,6 @@ class Usuario(db.Model):
     telefono_usuario = db.Column(db.String(10), nullable=False)
     tipo_usuario_id = db.Column(db.Integer, db.ForeignKey('TIPO_USUARIO.tipo_usuario_id'), nullable=False)
     
-
     def __init__(self, rut_usuario,nombre_usuario,apellido_usuario,correo_usuario,contrasena,telefono_usuario,tipo_usuario_id=2):
         self.rut_usuario = rut_usuario
         self.nombre_usuario = nombre_usuario
@@ -127,7 +127,6 @@ class Habitacion(db.Model):
         self.precio_noche = precio_noche
         self.cant_disponibles = cant_disponibles
 
-
 # Definición de la clase para el modelo MetodoPago
 class MetodoPago(db.Model):
     __tablename__ = 'METODO_PAGO'
@@ -143,8 +142,7 @@ class DetallePago(db.Model):
     pago_pendiente = db.Column(db.Integer, nullable=False)
     fecha_pago = db.Column(Date, nullable=False)
 
-    def __init__(self, detalle_pago_id,metodo_pago_id,pago_inicial,pago_pendiente,fecha_pago):
-        self.detalle_pago_id = detalle_pago_id
+    def __init__(self,metodo_pago_id,pago_inicial,pago_pendiente,fecha_pago):
         self.metodo_pago_id = metodo_pago_id
         self.pago_inicial = pago_inicial
         self.pago_pendiente = pago_pendiente
@@ -253,6 +251,8 @@ def reserva():
                 session['fecha_entrada'] = fecha_entrada
                 session['fecha_salida'] = fecha_salida
                 session['cant_personas'] = cant_personas
+                # Se obtienen sesiones
+                
                 print('GUARDÉ LAS SESIONEEEES')
                 return redirect(url_for('pago_reserva'))
 
@@ -272,48 +272,192 @@ def pago_reserva():
             return render_template('pago-reserva.html',usuario=usuario)
     return render_template('pago-reserva.html')
 
-# Vista método de pago
+# Vista Método de Pago
 @app.route('/metodo-pago', methods=['GET', 'POST'])
 def metodo_pago():
     usuario_id = session.get('usuario_id')
-    pago_inicial = request.form.get('pago-inicial')
     habitacion_twin = Habitacion.query.filter_by(habitacion_id=1).first()
     habitacion_mat = Habitacion.query.filter_by(habitacion_id=2).first()
     id_twin = habitacion_twin.habitacion_id
     id_mat = habitacion_mat.habitacion_id
+    id_metodo_credito = session.get('idCredito')
+    id_metodo_debito = session.get('idDebito')
+    id_metodo_transf = session.get('idTransf')
+    fecha_formateada = session.get('fechaFormateada')
+    fecha = datetime.strptime(fecha_formateada, '%d-%m-%Y').date()
+    fecha_entrada = session.get('fecha_entrada')
+    fecha_salida = session.get('fecha_salida')
+    fecha_entrada_format = datetime.strptime(fecha_entrada, '%d/%m/%Y').date()
+    fecha_salida_format = datetime.strptime(fecha_salida, '%d/%m/%Y').date()
+    precio_inicial = session.get('precio_inicial')
+    total = session.get('total')
+    # Obtener el último detalle_pago_id
+    
+    print('ID METODO PAGO CREDITO: ', id_metodo_credito)
+    print('ID METODO PAGO DEBITO: ', id_metodo_credito)
+    print('ID METODO PAGO TRANSFERENCIA: ',id_metodo_credito)
+    print('FECHA PAGO: ', fecha)
     if usuario_id:
         # Recuperar el usuario de la base de datos utilizando el ID
         usuario = Usuario.query.get(usuario_id)
         if usuario:
             if request.method == 'POST':
                 if id_twin:
-                    # Crear reserva tipo twin
-                    reserva_twin = Reserva(
-                        habitacion_id = 1,
-                        usuario_id = usuario_id,
-                        detalle_pago_id = 1,
-                        fecha_entrada = session['fecha_entrada'],
-                        fecha_salida = session['fecha_salida'],
-                        cant_personas = session['cant_personas']
-                    )
-                    db.session.add(reserva_twin)
-                    db.session.commit()
+                    if id_metodo_credito:
+                        # Detalle pago
+                        detalle_pago = DetallePago(
+                            metodo_pago_id = id_metodo_credito,
+                            pago_inicial = int(session['precio_inicial']),
+                            pago_pendiente = int(session['total']),
+                            fecha_pago = fecha
+                        )
+                        
+                        db.session.add(detalle_pago)
+                        db.session.flush()
+                        db.session.refresh(detalle_pago)
+                        print('ID',detalle_pago.detalle_pago_id)
+
+                        # Crear reserva tipo twin
+                        reserva_twin = Reserva(
+                            habitacion_id = 1,
+                            usuario_id = usuario_id,
+                            detalle_pago_id = detalle_pago.detalle_pago_id,
+                            fecha_entrada = fecha_entrada_format,
+                            fecha_salida = fecha_salida_format,
+                            cant_personas = session['cant_personas']
+                        )
+                        db.session.add(reserva_twin)
+                        db.session.commit()
+                    elif id_metodo_debito:
+                        detalle_pago = DetallePago(
+                            metodo_pago_id = id_metodo_debito,
+                            pago_inicial = int(session['precio_inicial']),
+                            pago_pendiente = int(session['total']),
+                            fecha_pago = fecha
+                        )
+                        db.session.add(detalle_pago)
+                        db.session.commit()
+                        db.session.refresh(detalle_pago)
+                        print('ID',detalle_pago.detalle_pago_id)
+            
+
+                        reserva_twin = Reserva(
+                            habitacion_id = 1,
+                            usuario_id = usuario_id,
+                            detalle_pago_id = detalle_pago.detalle_pago_id,
+                            fecha_entrada = fecha_entrada_format,
+                            fecha_salida = fecha_salida_format,
+                            cant_personas = session['cant_personas']
+                        )
+                        db.session.add(reserva_twin)
+                        db.session.commit()
+                    elif id_metodo_transf:
+                        detalle_pago = DetallePago(
+                            metodo_pago_id = id_metodo_transf,
+                            pago_inicial = int(session['precio_inicial']),
+                            pago_pendiente = int(session['total']),
+                            fecha_pago = fecha
+                        )
+                        
+                        db.session.add(detalle_pago)
+                        db.session.commit()
+                        db.session.refresh(detalle_pago)
+                        print('ID',detalle_pago.detalle_pago_id)
+
+                        # Crear reserva tipo twin
+                        reserva_twin = Reserva(
+                            habitacion_id = 1,
+                            usuario_id = usuario_id,
+                            detalle_pago_id = detalle_pago.detalle_pago_id,
+                            fecha_entrada = fecha_entrada_format,
+                            fecha_salida = fecha_salida_format,
+                            cant_personas = session['cant_personas']
+                        )
+                        db.session.add(reserva_twin)
+                        db.session.commit()
                 elif id_mat:
-                    # Crear reserva tipo matrimonial
-                    reserva_mat = Reserva(
-                        habitacion_id = 2,
-                        usuario_id = usuario_id,
-                        detalle_pago_id = 1,
-                        fecha_entrada = session['fecha_entrada'],
-                        fecha_salida = session['fecha_salida'],
-                        cant_personas = session['cant_personas']
-                    )
-                    db.session.add(reserva_mat)
-                    db.session.commit()
+                    if id_metodo_credito:
+                        # Detalle pago
+                        detalle_pago = DetallePago(
+                            metodo_pago_id = id_metodo_credito,
+                            pago_inicial = int(session['precio_inicial']),
+                            pago_pendiente = int(session['total']),
+                            fecha_pago = fecha
+                        )
+                        
+                        db.session.add(detalle_pago)
+                        db.session.commit()
+                        db.session.refresh(detalle_pago)
+                        print('ID',detalle_pago.detalle_pago_id)
+               
+
+                        # Crear reserva tipo matrimonial
+                        reserva_mat = Reserva(
+                            habitacion_id = 2,
+                            usuario_id = usuario_id,
+                            detalle_pago_id = detalle_pago.detalle_pago_id,
+                            fecha_entrada = fecha_entrada_format,
+                            fecha_salida = fecha_salida_format,
+                            cant_personas = session['cant_personas']
+                        )
+                        db.session.add(reserva_mat)
+                        db.session.commit()
+
+                    elif id_metodo_debito:
+                        # Detalle pago
+                        detalle_pago = DetallePago(
+                            metodo_pago_id = id_metodo_debito,
+                            pago_inicial = int(session['precio_inicial']),
+                            pago_pendiente = int(session['total']),
+                            fecha_pago = fecha
+                        )
+                        
+                        db.session.add(detalle_pago)
+                        db.session.commit()
+                        db.session.refresh(detalle_pago)
+                        print('ID',detalle_pago.detalle_pago_id)
+                        # Crear reserva tipo matrimonial
+                        reserva_mat = Reserva(
+                            habitacion_id = 2,
+                            usuario_id = usuario_id,
+                            detalle_pago_id = detalle_pago.detalle_pago_id,
+                            fecha_entrada = fecha_entrada_format,
+                            fecha_salida = fecha_salida_format,
+                            cant_personas = session['cant_personas']
+                        )
+                        db.session.add(reserva_mat)
+                        db.session.commit()
+
+                    elif id_metodo_transf:
+                        # Detalle pago
+                        detalle_pago = DetallePago(
+                            metodo_pago_id = id_metodo_transf,
+                            pago_inicial = int(session['precio_inicial']),
+                            pago_pendiente = int(session['total']),
+                            fecha_pago = fecha
+                        )
+                        
+                        db.session.add(detalle_pago)
+                        db.session.commit()
+                        db.session.refresh(detalle_pago)
+                        print('ID',detalle_pago.detalle_pago_id)
+
+                        # Crear reserva tipo matrimonial
+                        reserva_mat = Reserva(
+                            habitacion_id = 2,
+                            usuario_id = usuario_id,
+                            detalle_pago_id = detalle_pago.detalle_pago_id,
+                            fecha_entrada = fecha_entrada_format,
+                            fecha_salida = fecha_salida_format,
+                            cant_personas = session['cant_personas']
+                        )
+                        db.session.add(reserva_mat)
+                        db.session.commit()
+
                 return redirect(url_for('reserva_exitosa'))
     return render_template('metodo-pago.html',usuario=usuario)
 
-# Vista reserva exitosa
+# Vista Reserva Exitosa
 @app.route('/reserva-exitosa')
 def reserva_exitosa():
     usuario_id = session.get('usuario_id')
@@ -353,20 +497,48 @@ def pagina_no_encontrada(error):
     }
     return render_template('404.html',usuario_test=usuario_test), 404
 
-# Guardar precio inicial
+# Guardar total y precio inicial
 @app.route('/guardar_datos', methods=['POST'])
 def guardar_datos():
-    print('ENTRE A LA VISTA GUARDAR_DATOOOOOS')
+    print('ENTRE A LA VISTA GUARDAR_DATOS')
     # Obtener los datos enviados desde la solicitud AJAX
     datos = request.get_json()
     # Guardar los datos en la sesión
     session['precio_inicial'] = datos.get('precio_inicial')
     session['precio_inicial2'] = datos.get('precio_inicial2')
     session['total'] = datos.get('total')
-    print('PRECIO INICIAAAAAAL: ', session['precio_inicial'])
+    print('PRECIO INICIAL: ', session['precio_inicial'])
+    print('PRECIO INICIAL2: ', session['precio_inicial2'])
     print('TOTAL : ', session['total'])
 
     return jsonify({'mensaje': 'Datos guardados en la sesión correctamente'})
+
+@app.route('/guardar_fecha_actual', methods=['POST'])
+def guardar_fecha_actual():
+    print('ENTRE A LA VISTA GUARDAR_FECHA_ACTUAL')
+    data = request.get_json()
+    print('DATAAA: ',data)
+    fechaFormateada = data['fechaFormateada']
+    
+    print('FECHA ACTUAL: ', fechaFormateada)
+    # Guardar fechaTexto_date en la sesión
+    session['fechaFormateada'] = fechaFormateada
+
+    return jsonify({'mensaje': 'Datos guardados en la sesión correctamente'})
+
+@app.route('/guardar_id_metodo_pago', methods=['POST'])
+def guardar_valores_en_sesion():
+    data = request.get_json()
+    idCredito = data.get('idCredito')
+    idDebito = data.get('idDebito')
+    idTransf = data.get('idTransf')
+
+    # Guardar los valores en la sesión
+    session['idCredito'] = idCredito
+    session['idDebito'] = idDebito
+    session['idTransf'] = idTransf
+
+    return jsonify(success=True) 
 
 if __name__=='__main__':
     app.add_url_rule('/query_string', view_func=query_string)
