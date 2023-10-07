@@ -505,12 +505,8 @@ def guardar_datos():
     print("DATOS#####",datos)
     # Guardar los datos en la sesión
     session['precio_inicial'] = datos.get('precio_inicial')
-    session['precio_inicial2'] = datos.get('precio_inicial2')
     session['total'] = datos.get('total')
-    session['total2'] = datos.get('total2')
     session['totalPendiente'] = datos.get('totalPendiente')
-    session['totalPendiente2'] = datos.get('totalPendiente2')
-
 
     return jsonify({'mensaje': 'Datos guardados en la sesión correctamente'})
 

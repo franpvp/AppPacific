@@ -116,6 +116,15 @@
                                         </div>
                                         <div class="col"></div>
                                     </div>
+                                    <div class="row pt-4">
+                                        <div class="col"></div>
+                                        <div class="col-8">
+                                            <ol class="list-group text-center">
+                                                <li class="list-group-item">Precio Noche: $100.000 CLP</li>
+                                            </ol>
+                                        </div>
+                                        <div class="col"></div>
+                                    </div>
                                     <div class="row text-center pt-3">
                                         <div class="col">
                                             <a class="card-text pt-3" href="{{ url_for('habitaciones')}}">
@@ -169,6 +178,15 @@
                                         </div>
                                         <div class="col"></div>
                                     </div>
+                                    <div class="row pt-4">
+                                        <div class="col"></div>
+                                        <div class="col-8">
+                                            <ol class="list-group text-center">
+                                                <li class="list-group-item">Precio Noche: $80.000 CLP</li>
+                                            </ol>
+                                        </div>
+                                        <div class="col"></div>
+                                    </div>
                                     <div class="row text-center pt-3">
                                         <div class="col">
                                             <a class="card-text pt-3" href="{{ url_for('habitaciones') }}">
@@ -193,17 +211,17 @@
                 <!-- Caso Detalle Reserva para Standard Matrimonial -->
                 <div id="detalle_reserva" class="row" style="display: none;">
                     <div class="col-12 d-flex justify-content-center">
-                        <div class="card text-center" style="width: 18rem;">
+                        <div class="card text-center" style="width: 24rem;">
                             <div class="card-body">
                                 <h5 class="card-title">Detalle Reserva</h5>
                             </div>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item"><p>Noches de estadía: <span id="noches_estadia">0</span></p></li>
-                                <li class="list-group-item"><p>Total: <span id="total">{{ session['total'] }}</span></p></p></li>
-                                <li class="list-group-item"><p>Pago Reserva(30% del total):$ 
-                                    <span id="precio_inicial" name="precio_inicial">{{ session['precio_inicial']}} </span>
+                                <li class="list-group-item"><p>Total: <span id="total"></span></p></p></li>
+                                <li class="list-group-item"><p>Pago Reserva (30% del total):
+                                    <span id="precio_inicial" name="precio_inicial"><p></p></span>
                                 </li>
-                                <li class="list-group-item"><p>Total Pendiente: $ <span>{{ session['totalPendiente'] }}</span></p></p></li>
+                                <li class="list-group-item"><p>Total Pendiente: $ <span id="total_pendiente"></span></p></p></li>
                                 <button id="btn_eliminar1" class="btn btn-danger" type="button">Eliminar Selección</button>
                             </ul>
                         </div>
@@ -218,14 +236,10 @@
                         <div class="col"></div>
                     </div>
                 </div>
-                
             </div>
-            
         </form>
     </div>
 </div>
-
-
 <script>
 
     // Agregar datepicker a fecha de ingreso
@@ -240,13 +254,12 @@
         minDate: moment().startOf('day') // Establecer el mínimo a la fecha actual
     });
 
-
-
     var fechaIngreso = document.getElementById('fecha_ingreso');
     var fechaSalida = document.getElementById('fecha_salida');
     var nochesEstadia = document.getElementById('noches_estadia');
     var totalTexto = document.getElementById('total')
     var precioIncialTexto = document.getElementById('precio_inicial')
+    var totalPendienteTexto = document.getElementById('total_pendiente')
     var btnSeleccionar = document.getElementById('btn_seleccionar');
     var btnSeleccionar2 = document.getElementById('btn_seleccionar2');
 
@@ -261,7 +274,6 @@
         var fechaSalidaValue = fechaSalida.value;
 
         if (fechaIngresoValue && fechaSalidaValue) {
-          
             var fechaIngresoParts = fechaIngresoValue.split('/');
             var fechaSalidaParts = fechaSalidaValue.split('/');
 
@@ -280,7 +292,7 @@
             var total = Math.round(noches * precioNoche);
             console.log("TOTAL: ",total)
             var precioInicial = Math.round(total * 0.3);
-            var totalPendiente = total*0.7;
+            var totalPendiente = Math.round(total * 0.7);
             
             // Realizar solicitud AJAX
             var datos = {
@@ -304,8 +316,10 @@
             });
 
             nochesEstadia.textContent = noches;
-            totalTexto.textContent = total;
-            precioIncialTexto.textContent = precioInicial;
+            totalTexto.textContent = '$ ' + total + ' CLP';
+            precioIncialTexto.textContent = '$ ' + precioInicial + ' CLP';
+            totalPendienteTexto.textContent = '$ ' + totalPendiente + ' CLP'
+
 
             // Mostrar el detalle de reserva
             document.getElementById(detalleReservaId).style.display = 'block';
