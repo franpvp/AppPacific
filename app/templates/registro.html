@@ -42,7 +42,7 @@
         <div class="col-8">
             <div class="formulario">
                 <h2 class="titulo-registro">Registro</h2>
-                <form id="formularioRegistro" action="/registro" method="post">
+                <form action="/registro" method="post">
                     <!-- Campo rut -->
                     <div class="campo row">
                         <div class="col"></div>
@@ -127,30 +127,6 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Obtener el formulario por su ID
-        var formulario = document.getElementById('formularioRegistro');
-
-        // Agregar un evento de escucha para el envío del formulario
-        formulario.addEventListener('submit', function (event) {
-
-            // Obtener los valores de los campos del formulario
-            var rut = document.getElementById('rut').value;
-            var nombre = document.getElementById('nombre').value;
-            var apellido = document.getElementById('apellido').value;
-            var telefono = document.getElementById('telefono').value;
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('password').value;
-            var password2 = document.getElementById('password2').value;
-
-            // Guardar los campos en el localStorage
-            localStorage.setItem('rut', rut);
-            localStorage.setItem('nombre', nombre);
-            localStorage.setItem('apellido', apellido);
-            localStorage.setItem('telefono', telefono);
-            localStorage.setItem('email', email);
-        });
-    });
 </script>
 
 {% endblock %}

@@ -6,13 +6,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from werkzeug.security import check_password_hash, generate_password_hash
-from sqlalchemy import Date 
+from sqlalchemy import Date
 
 
 # Se inicializa la aplicación
 app = Flask(__name__)
 # Configura la conexión a MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:afterlife1998@localhost/sys'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:afterlife1998@localhost:8889/pacificapp'
 db = SQLAlchemy(app)
 #Clave secreta
 app.secret_key = 'DuocUC2023'
@@ -25,10 +25,6 @@ def before_request():
 def after_request(response):
     print("Después de la petición")
     return response
-
-datos = {
-        'fecha_ingreso': ''
-        }
 
 #Decorador con la ruta raiz
 @app.route('/')
@@ -43,14 +39,13 @@ def index():
 @app.route('/home')
 def home():
     usuario_id = session.get('usuario_id')
+    print(usuario_id)
     if usuario_id:
         # Recuperar el usuario de la base de datos utilizando el ID
         usuario = Usuario.query.get(usuario_id)
-
         if usuario:
             # Renderizar la plantilla HTML y pasar el objeto 'usuario' a la plantilla
             return render_template('home.html', usuario=usuario)
-
     return render_template('home.html')
 
 # Se pone la ruta a la vista mediante el decorador @app.route()
@@ -181,7 +176,6 @@ def login():
         if usuario and check_password_hash(usuario.contrasena, contrasena):
             # Iniciar sesión para el usuario
             session['usuario_id'] = usuario.usuario_id
-            flash('Inicio de sesión exitoso.', 'success')
             return redirect(url_for('home'))
         print('Email o contraseña incorrectos')
 
@@ -190,6 +184,7 @@ def login():
 # Vista Registro
 @app.route('/registro', methods=['GET','POST'])
 def registro():
+    print('ENTREEE A REGISTRO')
     if request.method == 'POST':
         # Obtener datos del formulario de registro
         rut = request.form['rut']
@@ -211,10 +206,12 @@ def registro():
             telefono_usuario = telefono,
             tipo_usuario_id = 2
         )
+        print('NUEVO USUARIO: ', nuevo_usuario.rut_usuario)
         
         # Agregar al usuario a la sesión y guardar en la base de datos
         db.session.add(nuevo_usuario)
         db.session.commit()
+        session['usuario_id'] = nuevo_usuario.usuario_id
         return redirect(url_for('home'))
     return render_template('/registro.html')
 
